@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Visualizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #controls {
+            margin: 20px;
+        }
+        canvas {
+            border: 1px solid black;
+            margin: 20px auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<h1>Sorting Visualizer</h1>
+<div id="controls">
+    <select id="algorithm">
+        <option value="bubble">Bubble Sort</option>
+        <option value="quick">Quick Sort</option>
+        <option value="insertion">Insertion Sort</option>
+    </select>
+    <button onclick="startSorting()">Start Sorting</button>
+</div>
+<canvas id="canvas" width="800" height="400"></canvas>
+<script src="visualizer.js"></script>
+</body>
+</html>
