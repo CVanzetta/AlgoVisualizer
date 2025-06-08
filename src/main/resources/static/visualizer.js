@@ -25,7 +25,6 @@ async function startSorting() {
     visualizeSorting(steps);
 }
 
-codex/créer-la-fonction-visualizesorting
 function visualizeSorting(steps) {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -62,4 +61,3 @@ function visualizeSorting(steps) {
 
     draw();
 }
-main
