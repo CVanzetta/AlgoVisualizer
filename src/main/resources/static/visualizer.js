@@ -23,3 +23,25 @@ async function startSorting() {
     // Démarrer la visualisation
     visualizeSorting(steps);
 }
+
+async function loadAlgorithms() {
+    try {
+        const response = await fetch('/api/sort/algorithms');
+        if (!response.ok) {
+            throw new Error('Failed to load algorithms');
+        }
+        const algorithms = await response.json();
+        const select = document.getElementById('algorithm');
+        select.innerHTML = '';
+        Object.keys(algorithms).forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = algorithms[key];
+            select.appendChild(option);
+        });
+    } catch (e) {
+        console.error('Error loading algorithms', e);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadAlgorithms);
