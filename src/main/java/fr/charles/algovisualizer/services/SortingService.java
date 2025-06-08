@@ -24,11 +24,15 @@ public class SortingService {
     }
 
     private void registerAlgorithm(SortingAlgorithm algorithm) {
-        algorithms.put(algorithm.getName().toLowerCase(Locale.ROOT), algorithm);
+        algorithms.put(slugify(algorithm.getName()), algorithm);
+    }
+
+    private String slugify(String name) {
+        return name.toLowerCase(Locale.ROOT).replaceAll("\\s+", "-");
     }
 
     public List<int[]> sort(String algorithmName, int[] array) {
-        SortingAlgorithm algorithm = algorithms.get(algorithmName.toLowerCase(Locale.ROOT));
+        SortingAlgorithm algorithm = algorithms.get(slugify(algorithmName));
         if (algorithm == null) {
             throw new IllegalArgumentException("Algorithme inconnu : " + algorithmName);
         }
