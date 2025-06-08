@@ -24,24 +24,41 @@ async function startSorting() {
     visualizeSorting(steps);
 }
 
-async function loadAlgorithms() {
-    try {
-        const response = await fetch('/api/sort/algorithms');
-        if (!response.ok) {
-            throw new Error('Failed to load algorithms');
-        }
-        const algorithms = await response.json();
-        const select = document.getElementById('algorithm');
-        select.innerHTML = '';
-        Object.keys(algorithms).forEach(key => {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = algorithms[key];
-            select.appendChild(option);
-        });
-    } catch (e) {
-        console.error('Error loading algorithms', e);
-    }
-}
+codex/créer-la-fonction-visualizesorting
+function visualizeSorting(steps) {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
 
-document.addEventListener('DOMContentLoaded', loadAlgorithms);
+    const width = canvas.width;
+    const height = canvas.height;
+
+    // Déterminer la valeur maximale pour mettre à l'échelle les barres
+    const allValues = steps.flat();
+    const maxVal = Math.max(...allValues);
+
+    let index = 0;
+
+    function draw() {
+        if (index >= steps.length) {
+            return;
+        }
+
+        ctx.clearRect(0, 0, width, height);
+
+        const array = steps[index];
+        const barWidth = width / array.length;
+
+        for (let i = 0; i < array.length; i++) {
+            const value = array[i];
+            const barHeight = (value / maxVal) * height;
+            ctx.fillStyle = "steelblue";
+            ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
+        }
+
+        index++;
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+}
+main
