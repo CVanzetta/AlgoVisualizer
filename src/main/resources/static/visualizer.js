@@ -1,8 +1,9 @@
 async function startSorting() {
     const algorithm = document.getElementById("algorithm").value;
+    const size = parseInt(document.getElementById("arraySize").value, 10) || 50;
 
     // Générer un tableau aléatoire
-    const array = Array.from({ length: 50 }, () => Math.floor(Math.random() * 300));
+    const array = Array.from({ length: size }, () => Math.floor(Math.random() * 300));
     console.log("Tableau envoyé :", array); // Log pour vérifier le contenu
 
     // Envoyer une requête à l'API pour récupérer les étapes du tri
