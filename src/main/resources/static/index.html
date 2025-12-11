@@ -12,6 +12,19 @@
         #controls {
             margin: 20px;
         }
+        .size-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .size-btn:hover {
+            background-color: #45a049;
+        }
         canvas {
             border: 1px solid black;
             margin: 20px auto;
@@ -27,11 +40,15 @@
         <option value="quick-sort">Quick Sort</option>
         <option value="insertion-sort">Insertion Sort</option>
     </select>
-    <label for="arraySize">Items:</label>
-    <input type="number" id="arraySize" value="50" min="1" style="width:60px;" />
-    <button onclick="startSorting()">Start Sorting</button>
+    <br><br>
+    <label>Nombre d'éléments :</label><br>
+    <button class="size-btn" onclick="startSorting(15)">15</button>
+    <button class="size-btn" onclick="startSorting(50)">50</button>
+    <button class="size-btn" onclick="startSorting(100)">100</button>
+    <button class="size-btn" onclick="startSorting(250)">250</button>
+    <button class="size-btn" onclick="startSorting(500)">500</button>
 </div>
 <canvas id="canvas" width="800" height="400"></canvas>
-<script src="visualizer.js"></script>
+<script src="visualizer.js?v=3"></script>
 </body>
 </html>

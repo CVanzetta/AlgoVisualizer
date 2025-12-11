@@ -27,7 +27,7 @@ public class GraphController {
     @PostMapping("/{algorithm}")
     public ResponseEntity<List<Integer>> shortestPath(@PathVariable String algorithm, @RequestBody GraphRequest request) {
         try {
-            List<Integer> path = graphService.findShortestPath(algorithm, request.graph(), request.start(), request.end());
+            List<Integer> path = graphService.findShortestPath(algorithm, request.getGraph(), request.getStart(), request.getEnd());
             return ResponseEntity.ok(path);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
