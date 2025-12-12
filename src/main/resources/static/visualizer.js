@@ -16,6 +16,32 @@ async function startSorting(size = 50) {
     }
     
     const algorithm = document.getElementById("algorithm").value;
+    
+    // Warn about slow algorithms with large datasets
+    const slowAlgorithms = ['bubble-sort', 'insertion-sort'];
+    const mediumAlgorithms = ['shell-sort'];
+    
+    if (slowAlgorithms.includes(algorithm) && size > 500) {
+        const message = `⚠️ WARNING: ${algorithm.toUpperCase()} is very slow with ${size} elements!\n\n` +
+                       `• Complexity: O(n²) = ${(size * size).toLocaleString()} operations\n` +
+                       `• Estimated time: ${size > 5000 ? 'Several minutes' : size > 1000 ? '1-2 minutes' : '10-30 seconds'}\n\n` +
+                       `Recommendation: Use Quick Sort, Merge Sort or Radix Sort for large datasets.\n\n` +
+                       `Continue anyway?`;
+        if (!confirm(message)) {
+            disableSortingButtons(false);
+            return;
+        }
+    } else if (mediumAlgorithms.includes(algorithm) && size > 5000) {
+        if (!confirm(`⚠️ ${algorithm} with ${size} elements may take 30-60 seconds.\n\nContinue?`)) {
+            disableSortingButtons(false);
+            return;
+        }
+    }
+    
+    // Info notification for large datasets with fast algorithms
+    if (size >= 1000 && !slowAlgorithms.includes(algorithm) && !mediumAlgorithms.includes(algorithm)) {
+        showNotification(`✅ Good choice! ${algorithm} handles ${size} elements efficiently (O(n log n))`, 3000);
+    }
 
     // Reset animation state (preserving individual properties to avoid losing references)
     stopAnimation();
@@ -230,7 +256,7 @@ function disableSortingButtons(disabled) {
     algorithmSelect.style.opacity = disabled ? '0.5' : '1';
 }
 
-function showNotification(message) {
+function showNotification(message, duration = 3000) {
     const notification = document.createElement('div');
     notification.className = 'notification';
     notification.textContent = message;
@@ -239,9 +265,9 @@ function showNotification(message) {
     // Show notification
     setTimeout(() => notification.classList.add('show'), 10);
     
-    // Hide and remove after 3 seconds
+    // Hide and remove after specified duration
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => notification.remove(), 300);
-    }, 3000);
+    }, duration);
 }

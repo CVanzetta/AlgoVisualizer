@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component("shell")
+@Component
 public class ShellSort implements SortingAlgorithm {
 
     @Override

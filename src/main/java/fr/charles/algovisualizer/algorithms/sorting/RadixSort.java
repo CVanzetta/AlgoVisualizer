@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component("radix")
+@Component
 public class RadixSort implements SortingAlgorithm {
 
     @Override
