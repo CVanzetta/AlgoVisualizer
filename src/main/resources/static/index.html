@@ -94,8 +94,8 @@
     <button class="stop-btn" id="stopBtn" onclick="stopSorting()" style="display: none;">⏹ Stop</button>
 </div>
 <div class="timer-container" id="timerDisplay" style="display: none;">
-    <div class="status" id="status">Prêt</div>
-    <div>Temps: <span id="timer">0.00s</span></div>
+    <div class="status ready" id="status">Ready</div>
+    <div>Time: <span id="timer">0.00s</span></div>
 </div>
 <canvas id="canvas" width="800" height="400"></canvas>
 <script>
@@ -124,6 +124,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-<script src="visualizer.js?v=8"></script>
+<script src="visualizer.js?v=9"></script>
 </body>
 </html>

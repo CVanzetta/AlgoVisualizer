@@ -2,32 +2,32 @@ let animationState = {
     isRunning: false,
     isPaused: false,
     intervalId: null,
+    timerIntervalId: null,
     startTime: null,
     elapsedTime: 0,
     pausedTime: 0
 };
 
 async function startSorting(size = 50) {
-    // Empêcher de lancer un nouveau tri si un est déjà en cours
+    // Prevent starting a new sort if one is already running
     if (animationState.isRunning) {
-        alert('Un tri est déjà en cours ! Utilisez le bouton Stop pour l\'arrêter.');
+        showNotification('A sort is already running! Use the Stop button to end it.');
         return;
     }
     
     const algorithm = document.getElementById("algorithm").value;
 
-    // Réinitialiser l'état
+    // Reset animation state (preserving individual properties to avoid losing references)
     stopAnimation();
-    animationState = {
-        isRunning: false,
-        isPaused: false,
-        intervalId: null,
-        startTime: null,
-        elapsedTime: 0,
-        pausedTime: 0
-    };
+    animationState.isRunning = false;
+    animationState.isPaused = false;
+    animationState.intervalId = null;
+    animationState.timerIntervalId = null;
+    animationState.startTime = null;
+    animationState.elapsedTime = 0;
+    animationState.pausedTime = 0;
     
-    // Désactiver tous les boutons de tri
+    // Disable all sorting buttons
     disableSortingButtons(true);
 
     // Générer un tableau aléatoire
@@ -56,19 +56,19 @@ async function startSorting(size = 50) {
     document.getElementById('playPauseInput').checked = true;
     updateStatus('running');
 
-    // Démarrer la visualisation
+    // Start visualization
     visualizeSorting(steps);
 }
 
 function visualizeSorting(steps) {
-    console.log("VERSION 2 - Utilisation de setInterval");
+    console.log("VERSION 2 - Using setInterval");
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
     const width = canvas.width;
     const height = canvas.height;
 
-    // Déterminer la valeur maximale sans utiliser flat() pour éviter le stack overflow
+    // Find maximum value without using flat() to avoid stack overflow
     let maxVal = 0;
     for (let i = 0; i < steps.length; i++) {
         for (let j = 0; j < steps[i].length; j++) {
@@ -78,7 +78,7 @@ function visualizeSorting(steps) {
         }
     }
 
-    // Optimisation : limiter le nombre d'étapes affichées pour éviter le débordement de pile
+    // Optimization: limit the number of steps displayed to avoid stack overflow
     const maxStepsToDisplay = 1000;
     let stepInterval = 1;
     if (steps.length > maxStepsToDisplay) {
@@ -99,15 +99,15 @@ function visualizeSorting(steps) {
         }
     }
 
-    // Démarrer le timer
+    // Start the timer
     animationState.startTime = Date.now();
     animationState.isRunning = true;
     updateTimer();
 
-    // Utiliser setInterval au lieu de requestAnimationFrame pour éviter le stack overflow
+    // Use setInterval instead of requestAnimationFrame to avoid stack overflow
     animationState.intervalId = setInterval(() => {
         if (animationState.isPaused) {
-            return; // Ne rien faire si en pause
+            return; // Do nothing if paused
         }
 
         if (index >= steps.length) {
@@ -116,13 +116,13 @@ function visualizeSorting(steps) {
             return;
         }
 
-        // Sauter des étapes si nécessaire pour garder une animation fluide
+        // Skip steps if necessary to keep animation smooth
         if (index % stepInterval === 0 || index === steps.length - 1) {
             drawArray(steps[index]);
         }
 
         index++;
-    }, 1); // 1ms entre chaque frame pour une animation rapide
+    }, 1); // 1ms between each frame for fast animation
 }
 
 function togglePlayPause() {
@@ -148,30 +148,40 @@ function stopAnimation(completed = false) {
         clearInterval(animationState.intervalId);
         animationState.intervalId = null;
     }
+    if (animationState.timerIntervalId) {
+        clearInterval(animationState.timerIntervalId);
+        animationState.timerIntervalId = null;
+    }
     animationState.isRunning = false;
     
-    // Calculer et afficher le temps total
+    // Calculate and display total time
     const totalTime = (animationState.elapsedTime / 1000).toFixed(2);
     document.getElementById('timer').textContent = totalTime + 's';
     
     if (completed) {
         updateStatus('completed');
-        document.getElementById('status').textContent = 'Terminé (Temps total: ' + totalTime + 's)';
+        document.getElementById('status').textContent = 'Completed (Total time: ' + totalTime + 's)';
     } else {
-        updateStatus('paused');
-        document.getElementById('status').textContent = 'Arrêté';
+        updateStatus('stopped');
+        document.getElementById('status').textContent = 'Stopped';
     }
     
-    // Réactiver les boutons de tri
+    // Re-enable sorting buttons
     disableSortingButtons(false);
 }
 
 function updateTimer() {
     if (!animationState.isRunning) return;
     
-    const timerInterval = setInterval(() => {
+    // Clear existing timer if any
+    if (animationState.timerIntervalId) {
+        clearInterval(animationState.timerIntervalId);
+    }
+    
+    animationState.timerIntervalId = setInterval(() => {
         if (!animationState.isRunning) {
-            clearInterval(timerInterval);
+            clearInterval(animationState.timerIntervalId);
+            animationState.timerIntervalId = null;
             return;
         }
         
@@ -188,9 +198,11 @@ function updateStatus(status) {
     statusElement.className = 'status ' + status;
     
     const statusText = {
-        'running': 'En cours',
-        'paused': 'En pause',
-        'completed': 'Terminé'
+        'ready': 'Ready',
+        'running': 'Running',
+        'paused': 'Paused',
+        'stopped': 'Stopped',
+        'completed': 'Completed'
     };
     
     statusElement.textContent = statusText[status] || status;
@@ -198,7 +210,7 @@ function updateStatus(status) {
 
 function stopSorting() {
     stopAnimation(false);
-    // Cacher les contrôles
+    // Hide controls
     document.getElementById('playPauseBtn').style.display = 'none';
     document.getElementById('stopBtn').style.display = 'none';
     document.getElementById('timerDisplay').style.display = 'none';
@@ -216,4 +228,20 @@ function disableSortingButtons(disabled) {
     
     algorithmSelect.disabled = disabled;
     algorithmSelect.style.opacity = disabled ? '0.5' : '1';
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Show notification
+    setTimeout(() => notification.classList.add('show'), 10);
+    
+    // Hide and remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }

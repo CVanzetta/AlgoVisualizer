@@ -419,20 +419,51 @@ body.dark-mode .play-pause-container {
     box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
 }
 
+.status.ready {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    color: #333;
+    box-shadow: 0 4px 15px rgba(168, 237, 234, 0.4);
+}
+
+.status.stopped {
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
 .status.completed {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     color: white;
     box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
 }
 
+/* Notification Toast */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    font-size: 0.95em;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease;
+    z-index: 10000;
+    max-width: 350px;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
 #timer {
     font-family: 'Courier New', monospace;
     font-size: 1.3em;
-}
-
-.status.completed {
-    background-color: #2196F3;
-    color: white;
 }
 
 .controls-row {
