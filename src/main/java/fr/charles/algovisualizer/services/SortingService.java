@@ -1,26 +1,23 @@
 package fr.charles.algovisualizer.services;
 
 import fr.charles.algovisualizer.algorithms.sorting.SortingAlgorithm;
-import fr.charles.algovisualizer.algorithms.sorting.BubbleSort;
-import fr.charles.algovisualizer.algorithms.sorting.QuickSort;
-import fr.charles.algovisualizer.algorithms.sorting.InsertionSort;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.List;
 
 @Service
 public class SortingService {
 
     private final Map<String, SortingAlgorithm> algorithms = new HashMap<>();
 
-    public SortingService() {
-        // Enregistrement des algorithmes disponibles
-        registerAlgorithm(new BubbleSort());
-        registerAlgorithm(new QuickSort());
-        registerAlgorithm(new InsertionSort());
+    @Autowired
+    public SortingService(List<SortingAlgorithm> algorithmList) {
+        // Auto-register all algorithms found by Spring
+        algorithmList.forEach(this::registerAlgorithm);
     }
 
     private void registerAlgorithm(SortingAlgorithm algorithm) {
