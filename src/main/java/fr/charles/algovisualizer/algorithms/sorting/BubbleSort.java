@@ -9,24 +9,33 @@ public class BubbleSort implements SortingAlgorithm {
 
     @Override
     public List<int[]> sort(int[] array) {
-        // Déclarez et initialisez la variable steps pour stocker les étapes
         List<int[]> steps = new ArrayList<>();
         int n = array.length;
+        
+        // Limit step recording for large arrays to prevent OOM
+        int recordInterval = n > 1000 ? Math.max(1, n / 500) : 1;
+        int stepCount = 0;
 
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
                 if (array[j] > array[j + 1]) {
-                    // Échange des éléments
+                    // Swap elements
                     int temp = array[j];
                     array[j] = array[j + 1];
                     array[j + 1] = temp;
                 }
-                // Ajoutez une copie du tableau actuel dans les étapes
-                steps.add(array.clone());
+                // Record step with interval for large arrays
+                if (++stepCount % recordInterval == 0) {
+                    steps.add(array.clone());
+                }
             }
         }
+        
+        // Always record final state
+        if (steps.isEmpty() || !java.util.Arrays.equals(steps.get(steps.size() - 1), array)) {
+            steps.add(array.clone());
+        }
 
-        // Retournez les étapes pour la visualisation
         return steps;
     }
 

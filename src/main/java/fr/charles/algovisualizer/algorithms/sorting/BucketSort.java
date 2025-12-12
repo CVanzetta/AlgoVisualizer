@@ -21,6 +21,10 @@ public class BucketSort implements SortingAlgorithm {
         // Record initial state
         steps.add(arr.clone());
         
+        // Limit step recording for large arrays
+        int recordInterval = n > 1000 ? Math.max(1, n / 1000) : 1;
+        int stepCount = 0;
+        
         // Find maximum value to normalize bucket indices
         int maxValue = arr[0];
         int minValue = arr[0];
@@ -56,9 +60,16 @@ public class BucketSort implements SortingAlgorithm {
             for (int j = 0; j < buckets[i].size(); j++) {
                 arr[index++] = buckets[i].get(j);
                 
-                // Record step after each element placement
-                steps.add(arr.clone());
+                // Record step with interval
+                if (++stepCount % recordInterval == 0) {
+                    steps.add(arr.clone());
+                }
             }
+        }
+        
+        // Always record final state
+        if (steps.isEmpty() || !java.util.Arrays.equals(steps.get(steps.size() - 1), arr)) {
+            steps.add(arr.clone());
         }
         
         return steps;

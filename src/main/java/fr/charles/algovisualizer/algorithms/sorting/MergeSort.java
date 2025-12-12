@@ -8,17 +8,28 @@ import java.util.List;
 public class MergeSort implements SortingAlgorithm {
 
     private List<int[]> steps;
+    private int stepCount = 0;
+    private int recordInterval = 1;
 
     @Override
     public List<int[]> sort(int[] array) {
         steps = new ArrayList<>();
         int[] arr = array.clone();
         
+        // Limit step recording for large arrays
+        recordInterval = arr.length > 1000 ? Math.max(1, arr.length / 1000) : 1;
+        stepCount = 0;
+        
         // Record initial state
         steps.add(arr.clone());
         
         // Start merge sort
         mergeSort(arr, 0, arr.length - 1);
+        
+        // Always record final state
+        if (steps.isEmpty() || !java.util.Arrays.equals(steps.get(steps.size() - 1), arr)) {
+            steps.add(arr.clone());
+        }
         
         return steps;
     }
@@ -67,8 +78,10 @@ public class MergeSort implements SortingAlgorithm {
             }
             k++;
             
-            // Record step after each merge operation
-            steps.add(arr.clone());
+            // Record step with interval
+            if (++stepCount % recordInterval == 0) {
+                steps.add(arr.clone());
+            }
         }
 
         // Copy remaining elements of L[] if any
@@ -76,7 +89,10 @@ public class MergeSort implements SortingAlgorithm {
             arr[k] = L[i];
             i++;
             k++;
-            steps.add(arr.clone());
+            
+            if (stepCount % recordInterval == 0) {
+                steps.add(arr.clone());
+            }
         }
 
         // Copy remaining elements of R[] if any
@@ -84,7 +100,10 @@ public class MergeSort implements SortingAlgorithm {
             arr[k] = R[j];
             j++;
             k++;
-            steps.add(arr.clone());
+            
+            if (stepCount % recordInterval == 0) {
+                steps.add(arr.clone());
+            }
         }
     }
 

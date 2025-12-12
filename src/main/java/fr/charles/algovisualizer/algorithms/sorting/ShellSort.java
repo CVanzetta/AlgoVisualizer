@@ -16,6 +16,10 @@ public class ShellSort implements SortingAlgorithm {
         // Record initial state
         steps.add(arr.clone());
         
+        // Limit step recording for large arrays to prevent OOM
+        int recordInterval = n > 1000 ? Math.max(1, n / 1000) : 1;
+        int stepCount = 0;
+        
         // Start with a big gap, then reduce the gap
         for (int interval = n / 2; interval > 0; interval /= 2) {
             // Do a gapped insertion sort for this interval size
@@ -27,16 +31,25 @@ public class ShellSort implements SortingAlgorithm {
                 for (j = i; j >= interval && arr[j - interval] > temp; j -= interval) {
                     arr[j] = arr[j - interval];
                     
-                    // Record step after each shift
-                    steps.add(arr.clone());
+                    // Record step with interval for large arrays
+                    if (++stepCount % recordInterval == 0) {
+                        steps.add(arr.clone());
+                    }
                 }
                 
                 // Put temp in its correct location
                 arr[j] = temp;
                 
                 // Record step after insertion
-                steps.add(arr.clone());
+                if (stepCount % recordInterval == 0) {
+                    steps.add(arr.clone());
+                }
             }
+        }
+        
+        // Always record final state
+        if (steps.isEmpty() || !java.util.Arrays.equals(steps.get(steps.size() - 1), arr)) {
+            steps.add(arr.clone());
         }
         
         return steps;

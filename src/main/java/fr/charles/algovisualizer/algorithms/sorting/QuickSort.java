@@ -7,10 +7,26 @@ import java.util.List;
 @Component
 public class QuickSort implements SortingAlgorithm {
 
+    private int stepCount = 0;
+    private int recordInterval = 1;
+
     @Override
     public List<int[]> sort(int[] array) {
         List<int[]> steps = new ArrayList<>();
-        quickSort(array, 0, array.length - 1, steps);
+        int[] arr = array.clone();
+        
+        // Limit step recording for large arrays
+        recordInterval = arr.length > 1000 ? Math.max(1, arr.length / 1000) : 1;
+        stepCount = 0;
+        
+        steps.add(arr.clone());
+        quickSort(arr, 0, arr.length - 1, steps);
+        
+        // Always record final state
+        if (steps.isEmpty() || !java.util.Arrays.equals(steps.get(steps.size() - 1), arr)) {
+            steps.add(arr.clone());
+        }
+        
         return steps;
     }
 
@@ -32,14 +48,22 @@ public class QuickSort implements SortingAlgorithm {
                 int temp = array[i];
                 array[i] = array[j];
                 array[j] = temp;
-                steps.add(array.clone());
+                
+                // Record step with interval
+                if (++stepCount % recordInterval == 0) {
+                    steps.add(array.clone());
+                }
             }
         }
 
         int temp = array[i + 1];
         array[i + 1] = array[high];
         array[high] = temp;
-        steps.add(array.clone());
+        
+        if (stepCount % recordInterval == 0) {
+            steps.add(array.clone());
+        }
+        
         return i + 1;
     }
 

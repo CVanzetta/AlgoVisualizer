@@ -11,6 +11,10 @@ public class InsertionSort implements SortingAlgorithm {
     public List<int[]> sort(int[] array) {
         List<int[]> steps = new ArrayList<>();
         int n = array.length;
+        
+        // Limit step recording for large arrays
+        int recordInterval = n > 1000 ? Math.max(1, n / 500) : 1;
+        int stepCount = 0;
 
         for (int i = 1; i < n; ++i) {
             int key = array[i];
@@ -19,9 +23,22 @@ public class InsertionSort implements SortingAlgorithm {
             while (j >= 0 && array[j] > key) {
                 array[j + 1] = array[j];
                 j = j - 1;
-                steps.add(array.clone());
+                
+                // Record step with interval
+                if (++stepCount % recordInterval == 0) {
+                    steps.add(array.clone());
+                }
             }
             array[j + 1] = key;
+            
+            // Record after each insertion
+            if (stepCount % recordInterval == 0) {
+                steps.add(array.clone());
+            }
+        }
+        
+        // Always record final state
+        if (steps.isEmpty() || !java.util.Arrays.equals(steps.get(steps.size() - 1), array)) {
             steps.add(array.clone());
         }
 

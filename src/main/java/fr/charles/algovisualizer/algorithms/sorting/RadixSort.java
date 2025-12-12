@@ -23,8 +23,14 @@ public class RadixSort implements SortingAlgorithm {
         int max = findMax(arr);
         
         // Apply Counting Sort for each digit (units, tens, hundreds, etc.)
+        // Radix sort already has few steps (one per digit), so no need to limit
         for (int exp = 1; max / exp > 0; exp *= 10) {
             countingSortByDigit(arr, exp, steps);
+        }
+        
+        // Always record final state
+        if (steps.isEmpty() || !java.util.Arrays.equals(steps.get(steps.size() - 1), arr)) {
+            steps.add(arr.clone());
         }
         
         return steps;
