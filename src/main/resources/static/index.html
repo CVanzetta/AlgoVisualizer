@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sorting Visualizer</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body class="light-mode">
 <div class="theme-switch-container">
@@ -81,6 +81,22 @@
     <button class="size-btn" onclick="startSorting(250)">250</button>
     <button class="size-btn" onclick="startSorting(500)">500</button>
 </div>
+<div class="controls-row">
+    <label class="play-pause-container" id="playPauseBtn" style="display: none;">
+        <input type="checkbox" id="playPauseInput" onchange="togglePlayPause()">
+        <svg viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="play">
+            <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path>
+        </svg>
+        <svg viewBox="0 0 320 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="pause">
+            <path d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"></path>
+        </svg>
+    </label>
+    <button class="stop-btn" id="stopBtn" onclick="stopSorting()" style="display: none;">⏹ Stop</button>
+</div>
+<div class="timer-container" id="timerDisplay" style="display: none;">
+    <div class="status" id="status">Prêt</div>
+    <div>Temps: <span id="timer">0.00s</span></div>
+</div>
 <canvas id="canvas" width="800" height="400"></canvas>
 <script>
 function toggleTheme() {
@@ -108,6 +124,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-<script src="visualizer.js?v=5"></script>
+<script src="visualizer.js?v=8"></script>
 </body>
 </html>
