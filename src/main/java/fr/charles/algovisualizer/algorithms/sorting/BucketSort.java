@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Component("bucket")
+@Component
 public class BucketSort implements SortingAlgorithm {
 
     @Override

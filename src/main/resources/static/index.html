@@ -72,10 +72,10 @@
         <option value="bubble-sort">Bubble Sort</option>
         <option value="quick-sort">Quick Sort</option>
         <option value="insertion-sort">Insertion Sort</option>
-        <option value="merge">Merge Sort</option>
-        <option value="shell">Shell Sort</option>
-        <option value="bucket">Bucket Sort</option>
-        <option value="radix">Radix Sort</option>
+        <option value="merge-sort">Merge Sort</option>
+        <option value="shell-sort">Shell Sort</option>
+        <option value="bucket-sort">Bucket Sort</option>
+        <option value="radix-sort">Radix Sort</option>
     </select>
     <br><br>
     <label>Nombre d'éléments :</label><br>
@@ -84,6 +84,9 @@
     <button class="size-btn" onclick="startSorting(100)">100</button>
     <button class="size-btn" onclick="startSorting(250)">250</button>
     <button class="size-btn" onclick="startSorting(500)">500</button>
+    <button class="size-btn" onclick="startSorting(1000)" id="btn-1000">1000</button>
+    <button class="size-btn" onclick="startSorting(5000)" id="btn-5000" style="background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%);">5000 ⚠️</button>
+    <button class="size-btn" onclick="startSorting(10000)" id="btn-10000" style="background: linear-gradient(135deg, #ff6a88 0%, #ee0979 100%);">10000 🔥</button>
 </div>
 <div class="controls-row">
     <label class="play-pause-container" id="playPauseBtn" style="display: none;">
@@ -128,6 +131,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-<script src="visualizer.js?v=9"></script>
+<script src="visualizer.js?v=11"></script>
 </body>
 </html>
