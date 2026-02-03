@@ -2,7 +2,7 @@ package fr.charles.algovisualizer.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.util.Map;
 
 public class GraphRequest {
@@ -10,16 +10,18 @@ public class GraphRequest {
     @Size(max = 1000, message = "Graph cannot have more than 1000 nodes")
     private Map<Integer, Map<Integer, Integer>> graph;
     
-    @Min(value = 0, message = "Start node must be non-negative")
-    private int start;
+    @NotNull(message = "Start node cannot be null")
+    @PositiveOrZero(message = "Start node must be non-negative")
+    private Integer start;
     
-    @Min(value = 0, message = "End node must be non-negative")
-    private int end;
+    @NotNull(message = "End node cannot be null")
+    @PositiveOrZero(message = "End node must be non-negative")
+    private Integer end;
 
     public GraphRequest() {
     }
 
-    public GraphRequest(Map<Integer, Map<Integer, Integer>> graph, int start, int end) {
+    public GraphRequest(Map<Integer, Map<Integer, Integer>> graph, Integer start, Integer end) {
         this.graph = graph;
         this.start = start;
         this.end = end;
@@ -33,19 +35,19 @@ public class GraphRequest {
         this.graph = graph;
     }
 
-    public int getStart() {
+    public Integer getStart() {
         return start;
     }
 
-    public void setStart(int start) {
+    public void setStart(Integer start) {
         this.start = start;
     }
 
-    public int getEnd() {
+    public Integer getEnd() {
         return end;
     }
 
-    public void setEnd(int end) {
+    public void setEnd(Integer end) {
         this.end = end;
     }
 }
