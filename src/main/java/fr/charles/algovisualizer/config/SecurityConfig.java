@@ -32,7 +32,7 @@ public class SecurityConfig {
                 
                 // XSS Protection
                 .xssProtection(xss -> xss
-                    .headerValue("1; mode=block")
+                    .block(true)
                 )
                 
                 // Content Security Policy
