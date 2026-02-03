@@ -18,6 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
             if (!response.containsHeader("Cache-Control")) {
                 response.setHeader("Cache-Control", "max-age=" + Duration.ofHours(1).toSeconds());
             }
+            // Additional security headers (complementary to Spring Security)
+            response.setHeader("X-Content-Type-Options", "nosniff");
             return true;
         }
     }
