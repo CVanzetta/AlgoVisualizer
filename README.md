@@ -1,5 +1,12 @@
 # AlgoVisualizer
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=CVanzetta_AlgoVisualizer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=CVanzetta_AlgoVisualizer)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=CVanzetta_AlgoVisualizer&metric=coverage)](https://sonarcloud.io/summary/new_code?id=CVanzetta_AlgoVisualizer)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=CVanzetta_AlgoVisualizer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=CVanzetta_AlgoVisualizer)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=CVanzetta_AlgoVisualizer&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=CVanzetta_AlgoVisualizer)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=CVanzetta_AlgoVisualizer&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=CVanzetta_AlgoVisualizer)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=CVanzetta_AlgoVisualizer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=CVanzetta_AlgoVisualizer)
+
 Une application Spring Boot pour visualiser des algorithmes de tri et de graphes en temps réel dans le navigateur.
 
 ## Fonctionnalités
