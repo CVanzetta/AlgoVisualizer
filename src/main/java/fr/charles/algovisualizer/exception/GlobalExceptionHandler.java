@@ -1,6 +1,8 @@
 package fr.charles.algovisualizer.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,9 +17,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationException(
             MethodArgumentNotValidException ex, WebRequest request) {
+        logger.warn("Validation failed: path={}, violations={}", 
+                   request.getDescription(false), ex.getBindingResult().getFieldErrorCount());
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
@@ -29,6 +35,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String, Object>> handleConstraintViolationException(
             ConstraintViolationException ex, WebRequest request) {
+        logger.warn("Constraint violation: path={}, violations={}", 
+                   request.getDescription(false), ex.getConstraintViolations().size());
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
@@ -40,6 +48,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(
             IllegalArgumentException ex, WebRequest request) {
+        logger.warn("Illegal argument: path={}, error={}", 
+                   request.getDescription(false), ex.getMessage());
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
@@ -51,13 +61,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGlobalException(
             Exception ex, WebRequest request) {
+        logger.error("Internal server error: path={}, type={}, message={}", 
+                    request.getDescription(false), ex.getClass().getName(), ex.getMessage());
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         body.put("error", "An error occurred");
-        
-        // Log the actual exception for debugging (not exposed to client)
-        System.err.println("Internal error: " + ex.getMessage());
         
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }

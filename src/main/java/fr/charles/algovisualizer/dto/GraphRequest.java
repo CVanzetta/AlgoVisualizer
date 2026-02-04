@@ -3,11 +3,12 @@ package fr.charles.algovisualizer.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.PositiveOrZero;
+import fr.charles.algovisualizer.validation.ValidGraph;
 import java.util.Map;
 
 public class GraphRequest {
     @NotNull(message = "Graph cannot be null")
-    @Size(max = 1000, message = "Graph cannot have more than 1000 nodes")
+    @ValidGraph
     private Map<Integer, Map<Integer, Integer>> graph;
     
     @NotNull(message = "Start node cannot be null")

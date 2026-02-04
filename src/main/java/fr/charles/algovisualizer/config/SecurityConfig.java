@@ -75,10 +75,18 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://127.0.0.1:8080"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS"));
+        // Restrict headers to only those needed
+        configuration.setAllowedHeaders(Arrays.asList(
+            "Content-Type", 
+            "Accept", 
+            "X-Requested-With",
+            "Cache-Control"
+        ));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
+        // Expose only safe headers
+        configuration.setExposedHeaders(Arrays.asList("Content-Type", "X-Content-Type-Options"));
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
