@@ -517,7 +517,6 @@ async function greedyBestFirst() {
     //      * Visualiser
     
     const visited = new Set();
-    const cameFrom = new Map();
     let visitedCount = 0;
     
     // VOTRE CODE ICI
