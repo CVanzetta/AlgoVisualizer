@@ -154,46 +154,115 @@ function drawMaze(panel) {
 // ========================================
 // GESTION SOURIS
 // ========================================
+    // Ne pas permettre l'édition pendant une résolution
+    const isRunning = panel === 1 ? state.isRunning1 : state.isRunning2;
+    if (isRunning) {
+        return;
+    }
 
-function handleMouseDown(e, panel) {
-    if (panel === 1) state.isDrawing1 = true;
-    else state.isDrawing2 = true;
-    
-    handleMouseMove(e, panel);
-}
-
-// Helper: Check if position is start or end point
-function isSpecialPosition(x, y, startPos, endPos) {
-    return (x === startPos.x && y === startPos.y) || (x === endPos.x && y === endPos.y);
-}
-
-function handleMouseMove(e, panel) {
-    const isDrawing = panel === 1 ? state.isDrawing1 : state.isDrawing2;
-    if (!isDrawing) return;
-    
     const canvas = panel === 1 ? state.canvas1 : state.canvas2;
     const maze = panel === 1 ? state.maze1 : state.maze2;
     const rect = canvas.getBoundingClientRect();
-    
+
     const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
     const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
-    
-    const isInBounds = x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE;
-    if (!isInBounds) return;
-    
+
+    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) {
+        return;
+    }
+
     const startPos = panel === 1 ? state.startPos1 : state.startPos2;
     const endPos = panel === 1 ? state.endPos1 : state.endPos2;
-    
-    if (isSpecialPosition(x, y, startPos, endPos)) return;
-    
-    // Toggle wall
-    maze[y][x] = maze[y][x] === CELL_TYPES.WALL ? CELL_TYPES.EMPTY : CELL_TYPES.WALL;
+
+    // Ne pas dessiner sur départ/arrivée
+    if ((x === startPos.x && y === startPos.y) || (x === endPos.x && y === endPos.y)) {
+        return;
+    }
+
+    // Déterminer le mode de dessin pour ce drag : remplir ou vider
+    const drawMode = (maze[y][x] === CELL_TYPES.WALL) ? CELL_TYPES.EMPTY : CELL_TYPES.WALL;
+
+    if (panel === 1) {
+        state.isDrawing1 = true;
+        state.drawMode1 = drawMode;
+        state.lastDrawCell1 = { x: x, y: y };
+    } else {
+        state.isDrawing2 = true;
+        state.drawMode2 = drawMode;
+        state.lastDrawCell2 = { x: x, y: y };
+    }
+
+    // Appliquer immédiatement le dessin sur la cellule initiale
+    maze[y][x] = drawMode;
+    drawMaze(panel);
+}
+
+function handleMouseMove(e, panel) {
+    // Ne pas permettre l'édition pendant une résolution
+    const isRunning = panel === 1 ? state.isRunning1 : state.isRunning2;
+    if (isRunning) {
+        return;
+    }
+
+    const isDrawing = panel === 1 ? state.isDrawing1 : state.isDrawing2;
+    if (!isDrawing) return;
+
+    const canvas = panel === 1 ? state.canvas1 : state.canvas2;
+    const maze = panel === 1 ? state.maze1 : state.maze2;
+    const rect = canvas.getBoundingClientRect();
+
+    const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
+    const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
+
+    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) {
+        return;
+    }
+
+    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
+    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
+
+    // Ne pas dessiner sur départ/arrivée
+    if ((x === startPos.x && y === startPos.y) || (x === endPos.x && y === endPos.y)) {
+        return;
+    }
+
+    const lastDrawCell = panel === 1 ? state.lastDrawCell1 : state.lastDrawCell2;
+    if (lastDrawCell && lastDrawCell.x === x && lastDrawCell.y === y) {
+        // Même cellule que le dernier événement : ne rien faire pour éviter le toggle
+        return;
+    }
+
+    // Utiliser le mode de dessin défini au mousedown ; fallback sur l'ancien comportement si absent
+    const storedDrawMode = panel === 1 ? state.drawMode1 : state.drawMode2;
+    let valueToSet;
+    if (storedDrawMode === CELL_TYPES.WALL || storedDrawMode === CELL_TYPES.EMPTY) {
+        valueToSet = storedDrawMode;
+    } else {
+        // Cas de secours : comportement toggle historique
+        valueToSet = (maze[y][x] === CELL_TYPES.WALL) ? CELL_TYPES.EMPTY : CELL_TYPES.WALL;
+    }
+
+    maze[y][x] = valueToSet;
+
+    if (panel === 1) {
+        state.lastDrawCell1 = { x: x, y: y };
+    } else {
+        state.lastDrawCell2 = { x: x, y: y };
+    }
+
     drawMaze(panel);
 }
 
 function handleMouseUp(panel) {
-    if (panel === 1) state.isDrawing1 = false;
-    else state.isDrawing2 = false;
+    if (panel === 1) {
+        state.isDrawing1 = false;
+        state.lastDrawCell1 = null;
+        state.drawMode1 = undefined;
+    } else {
+        state.isDrawing2 = false;
+        state.lastDrawCell2 = null;
+        state.drawMode2 = undefined;
+    }
 }
 
 // ========================================
