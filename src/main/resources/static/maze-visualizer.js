@@ -56,19 +56,32 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function initMazes() {
+    console.log('🚀 Initialisation des labyrinthes...');
+    
     // Canvas 1
     state.canvas1 = document.getElementById('mazeCanvas1');
+    if (!state.canvas1) {
+        console.error('❌ Canvas 1 introuvable !');
+        return;
+    }
     state.ctx1 = state.canvas1.getContext('2d');
     state.maze1 = createEmptyMaze();
+    console.log('✅ Canvas 1 initialisé');
     
     // Canvas 2
     state.canvas2 = document.getElementById('mazeCanvas2');
+    if (!state.canvas2) {
+        console.error('❌ Canvas 2 introuvable !');
+        return;
+    }
     state.ctx2 = state.canvas2.getContext('2d');
     state.maze2 = createEmptyMaze();
+    console.log('✅ Canvas 2 initialisé');
     
     // Dessiner les deux labyrinthes
     drawMaze(1);
     drawMaze(2);
+    console.log('✅ Labyrinthes dessinés');
 }
 
 function createEmptyMaze() {
@@ -83,6 +96,13 @@ function createEmptyMaze() {
 }
 
 function setupEventListeners() {
+    console.log('🎮 Configuration des event listeners...');
+    
+    if (!state.canvas1 || !state.canvas2) {
+        console.error('❌ Canvas non initialisés, event listeners non configurés');
+        return;
+    }
+    
     // Canvas 1 mouse events
     state.canvas1.addEventListener('mousedown', (e) => handleMouseDown(e, 1));
     state.canvas1.addEventListener('mousemove', (e) => handleMouseMove(e, 1));
@@ -94,6 +114,8 @@ function setupEventListeners() {
     state.canvas2.addEventListener('mousemove', (e) => handleMouseMove(e, 2));
     state.canvas2.addEventListener('mouseup', () => handleMouseUp(2));
     state.canvas2.addEventListener('mouseleave', () => handleMouseUp(2));
+    
+    console.log('✅ Event listeners configurés');
 }
 
 // ========================================
@@ -214,8 +236,14 @@ async function generateMaze(panel) {
         // Mettre à jour le labyrinthe
         if (panel === 1) {
             state.maze1 = data.maze;
+            // S'assurer que départ et arrivée sont des passages
+            state.maze1[state.startPos1.y][state.startPos1.x] = CELL_TYPES.EMPTY;
+            state.maze1[state.endPos1.y][state.endPos1.x] = CELL_TYPES.EMPTY;
         } else {
             state.maze2 = data.maze;
+            // S'assurer que départ et arrivée sont des passages
+            state.maze2[state.startPos2.y][state.startPos2.x] = CELL_TYPES.EMPTY;
+            state.maze2[state.endPos2.y][state.endPos2.x] = CELL_TYPES.EMPTY;
         }
         
         resetMaze(panel);
@@ -231,6 +259,8 @@ async function generateMaze(panel) {
 
 function generateMazeLocal(panel) {
     const maze = panel === 1 ? state.maze1 : state.maze2;
+    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
+    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
     
     // Génération aléatoire simple (fallback)
     for (let y = 0; y < GRID_SIZE; y++) {
@@ -238,6 +268,10 @@ function generateMazeLocal(panel) {
             maze[y][x] = Math.random() < 0.3 ? CELL_TYPES.WALL : CELL_TYPES.EMPTY;
         }
     }
+    
+    // S'assurer que départ et arrivée sont des passages
+    maze[startPos.y][startPos.x] = CELL_TYPES.EMPTY;
+    maze[endPos.y][endPos.x] = CELL_TYPES.EMPTY;
     
     resetMaze(panel);
     drawMaze(panel);
@@ -301,57 +335,81 @@ function copyMaze1To2() {
 // ========================================
 // RÉSOLUTION DE LABYRINTHE
 // ========================================
+// RÉSOLUTION DE LABYRINTHE
+// ========================================
 
 async function solveMaze(panel) {
-    const solverSelect = document.getElementById(`solver${panel}`);
-    const algorithm = solverSelect.value;
-    const maze = panel === 1 ? state.maze1 : state.maze2;
-    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
-    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
+    console.log(`🔍 Début résolution panel ${panel}`);
     
-    if (panel === 1) state.isRunning1 = true;
-    else state.isRunning2 = true;
-    
-    resetMaze(panel);
-    
-    const startTime = performance.now();
-    let path = null;
-    let visitedCount = 0;
-    
-    // Appeler l'algorithme approprié
-    switch (algorithm) {
-        case 'bfs':
-            ({ path, visitedCount } = await bfs(panel));
-            break;
-        case 'dfs':
-            ({ path, visitedCount } = await dfs(panel));
-            break;
-        case 'astar':
-            ({ path, visitedCount } = await astar(panel));
-            break;
-        case 'dijkstra':
-            ({ path, visitedCount } = await dijkstra(panel));
-            break;
-        case 'greedy':
-            ({ path, visitedCount } = await greedyBestFirst(panel));
-            break;
+    try {
+        const solverSelect = document.getElementById(`solver${panel}`);
+        const algorithm = solverSelect.value;
+        const maze = panel === 1 ? state.maze1 : state.maze2;
+        const startPos = panel === 1 ? state.startPos1 : state.startPos2;
+        const endPos = panel === 1 ? state.endPos1 : state.endPos2;
+        
+        console.log(`Algorithme: ${algorithm}, Départ: (${startPos.x},${startPos.y}), Arrivée: (${endPos.x},${endPos.y})`);
+        
+        if (panel === 1) state.isRunning1 = true;
+        else state.isRunning2 = true;
+        
+        resetMaze(panel);
+        
+        const startTime = performance.now();
+        let path = null;
+        let visitedCount = 0;
+        
+        // Appeler l'algorithme approprié
+        switch (algorithm) {
+            case 'bfs':
+                console.log('🔵 Lancement BFS');
+                ({ path, visitedCount } = await bfs(panel));
+                break;
+            case 'dfs':
+                console.log('🟣 Lancement DFS');
+                ({ path, visitedCount } = await dfs(panel));
+                break;
+            case 'astar':
+                console.log('⭐ Lancement A*');
+                ({ path, visitedCount } = await astar(panel));
+                break;
+            case 'dijkstra':
+                console.log('🔷 Lancement Dijkstra');
+                ({ path, visitedCount } = await dijkstra(panel));
+                break;
+            case 'greedy':
+                console.log('🟢 Lancement Greedy');
+                ({ path, visitedCount } = await greedyBestFirst(panel));
+                break;
+            default:
+                console.error(`❌ Algorithme inconnu: ${algorithm}`);
+                return;
+        }
+        
+        const endTime = performance.now();
+        const executionTime = Math.round(endTime - startTime);
+        
+        console.log(`✅ Résolution terminée: ${path ? path.length : 'Aucun'} cellules, ${visitedCount} explorées, ${executionTime}ms`);
+        
+        if (path) {
+            await visualizePath(panel, path);
+            document.getElementById(`pathLength${panel}`).textContent = path.length;
+        } else {
+            document.getElementById(`pathLength${panel}`).textContent = 'Aucun';
+            console.warn('⚠️ Aucun chemin trouvé !');
+        }
+        
+        document.getElementById(`visitedCount${panel}`).textContent = visitedCount;
+        document.getElementById(`executionTime${panel}`).textContent = executionTime + 'ms';
+        
+        if (panel === 1) state.isRunning1 = false;
+        else state.isRunning2 = false;
+        
+    } catch (error) {
+        console.error('❌ Erreur lors de la résolution:', error);
+        if (panel === 1) state.isRunning1 = false;
+        else state.isRunning2 = false;
     }
-    
-    const endTime = performance.now();
-    const executionTime = Math.round(endTime - startTime);
-    
-    if (path) {
-        await visualizePath(panel, path);
-        document.getElementById(`pathLength${panel}`).textContent = path.length;
-    } else {
-        document.getElementById(`pathLength${panel}`).textContent = 'Aucun';
-    }
-    
-    document.getElementById(`visitedCount${panel}`).textContent = visitedCount;
-    document.getElementById(`executionTime${panel}`).textContent = executionTime + 'ms';
-    
-    if (panel === 1) state.isRunning1 = false;
-    else state.isRunning2 = false;
 }
 
 async function visualizePath(panel, path) {
@@ -366,38 +424,243 @@ async function visualizePath(panel, path) {
 
 // ========================================
 // ALGORITHMES DE RÉSOLUTION
-// À IMPLÉMENTER
 // ========================================
 
 async function bfs(panel) {
-    // TODO: Implémenter BFS pour le panel spécifié
-    // Copier la logique de l'ancien maze-visualizer-old.js
-    console.log(`BFS - Panel ${panel} - À implémenter`);
-    return { path: null, visitedCount: 0 };
+    const maze = panel === 1 ? state.maze1 : state.maze2;
+    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
+    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
+    
+    const queue = [startPos];
+    const visited = new Set([`${startPos.x},${startPos.y}`]);
+    const cameFrom = new Map();
+    let visitedCount = 0;
+    
+    while (queue.length > 0) {
+        const current = queue.shift();
+        visitedCount++;
+        
+        // Marquer comme visité
+        if (current.x !== startPos.x || current.y !== startPos.y) {
+            maze[current.y][current.x] = CELL_TYPES.VISITED;
+            drawMaze(panel);
+            await sleep(5);
+        }
+        
+        // Objectif atteint
+        if (current.x === endPos.x && current.y === endPos.y) {
+            const path = reconstructPath(cameFrom, endPos);
+            return { path, visitedCount };
+        }
+        
+        // Explorer les voisins
+        for (const neighbor of getNeighbors(panel, current.x, current.y)) {
+            const key = `${neighbor.x},${neighbor.y}`;
+            if (!visited.has(key)) {
+                visited.add(key);
+                cameFrom.set(key, `${current.x},${current.y}`);
+                queue.push(neighbor);
+            }
+        }
+    }
+    
+    return { path: null, visitedCount };
 }
 
 async function dfs(panel) {
-    // TODO: Implémenter DFS
-    console.log(`DFS - Panel ${panel} - À implémenter`);
-    return { path: null, visitedCount: 0 };
+    const maze = panel === 1 ? state.maze1 : state.maze2;
+    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
+    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
+    
+    const stack = [startPos];
+    const visited = new Set([`${startPos.x},${startPos.y}`]);
+    const cameFrom = new Map();
+    let visitedCount = 0;
+    
+    while (stack.length > 0) {
+        const current = stack.pop();
+        visitedCount++;
+        
+        // Marquer comme visité
+        if (current.x !== startPos.x || current.y !== startPos.y) {
+            maze[current.y][current.x] = CELL_TYPES.VISITED;
+            drawMaze(panel);
+            await sleep(5);
+        }
+        
+        // Objectif atteint
+        if (current.x === endPos.x && current.y === endPos.y) {
+            const path = reconstructPath(cameFrom, endPos);
+            return { path, visitedCount };
+        }
+        
+        // Explorer les voisins
+        for (const neighbor of getNeighbors(panel, current.x, current.y)) {
+            const key = `${neighbor.x},${neighbor.y}`;
+            if (!visited.has(key)) {
+                visited.add(key);
+                cameFrom.set(key, `${current.x},${current.y}`);
+                stack.push(neighbor);
+            }
+        }
+    }
+    
+    return { path: null, visitedCount };
 }
 
 async function astar(panel) {
-    // TODO: Implémenter A*
-    console.log(`A* - Panel ${panel} - À implémenter`);
-    return { path: null, visitedCount: 0 };
+    const maze = panel === 1 ? state.maze1 : state.maze2;
+    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
+    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
+    
+    const openSet = [{ ...startPos, f: 0, g: 0 }];
+    const visited = new Set();
+    const cameFrom = new Map();
+    const gScore = new Map([[`${startPos.x},${startPos.y}`, 0]]);
+    let visitedCount = 0;
+    
+    while (openSet.length > 0) {
+        // Trouver le nœud avec le plus petit f
+        openSet.sort((a, b) => a.f - b.f);
+        const current = openSet.shift();
+        const currentKey = `${current.x},${current.y}`;
+        
+        if (visited.has(currentKey)) continue;
+        visited.add(currentKey);
+        visitedCount++;
+        
+        // Marquer comme visité
+        if (current.x !== startPos.x || current.y !== startPos.y) {
+            maze[current.y][current.x] = CELL_TYPES.VISITED;
+            drawMaze(panel);
+            await sleep(5);
+        }
+        
+        // Objectif atteint
+        if (current.x === endPos.x && current.y === endPos.y) {
+            const path = reconstructPath(cameFrom, endPos);
+            return { path, visitedCount };
+        }
+        
+        // Explorer les voisins
+        for (const neighbor of getNeighbors(panel, current.x, current.y)) {
+            const neighborKey = `${neighbor.x},${neighbor.y}`;
+            if (visited.has(neighborKey)) continue;
+            
+            const tentativeG = current.g + 1;
+            
+            if (!gScore.has(neighborKey) || tentativeG < gScore.get(neighborKey)) {
+                gScore.set(neighborKey, tentativeG);
+                const h = manhattanDistance(neighbor.x, neighbor.y, endPos.x, endPos.y);
+                const f = tentativeG + h;
+                
+                cameFrom.set(neighborKey, currentKey);
+                openSet.push({ ...neighbor, f, g: tentativeG });
+            }
+        }
+    }
+    
+    return { path: null, visitedCount };
 }
 
 async function dijkstra(panel) {
-    // TODO: Implémenter Dijkstra
-    console.log(`Dijkstra - Panel ${panel} - À implémenter`);
-    return { path: null, visitedCount: 0 };
+    const maze = panel === 1 ? state.maze1 : state.maze2;
+    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
+    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
+    
+    const openSet = [{ ...startPos, dist: 0 }];
+    const visited = new Set();
+    const cameFrom = new Map();
+    const distances = new Map([[`${startPos.x},${startPos.y}`, 0]]);
+    let visitedCount = 0;
+    
+    while (openSet.length > 0) {
+        // Trouver le nœud avec la plus petite distance
+        openSet.sort((a, b) => a.dist - b.dist);
+        const current = openSet.shift();
+        const currentKey = `${current.x},${current.y}`;
+        
+        if (visited.has(currentKey)) continue;
+        visited.add(currentKey);
+        visitedCount++;
+        
+        // Marquer comme visité
+        if (current.x !== startPos.x || current.y !== startPos.y) {
+            maze[current.y][current.x] = CELL_TYPES.VISITED;
+            drawMaze(panel);
+            await sleep(5);
+        }
+        
+        // Objectif atteint
+        if (current.x === endPos.x && current.y === endPos.y) {
+            const path = reconstructPath(cameFrom, endPos);
+            return { path, visitedCount };
+        }
+        
+        // Explorer les voisins
+        for (const neighbor of getNeighbors(panel, current.x, current.y)) {
+            const neighborKey = `${neighbor.x},${neighbor.y}`;
+            if (visited.has(neighborKey)) continue;
+            
+            const tentativeDist = current.dist + 1;
+            
+            if (!distances.has(neighborKey) || tentativeDist < distances.get(neighborKey)) {
+                distances.set(neighborKey, tentativeDist);
+                cameFrom.set(neighborKey, currentKey);
+                openSet.push({ ...neighbor, dist: tentativeDist });
+            }
+        }
+    }
+    
+    return { path: null, visitedCount };
 }
 
 async function greedyBestFirst(panel) {
-    // TODO: Implémenter Greedy
-    console.log(`Greedy - Panel ${panel} - À implémenter`);
-    return { path: null, visitedCount: 0 };
+    const maze = panel === 1 ? state.maze1 : state.maze2;
+    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
+    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
+    
+    const openSet = [{ ...startPos, h: 0 }];
+    const visited = new Set();
+    const cameFrom = new Map();
+    let visitedCount = 0;
+    
+    while (openSet.length > 0) {
+        // Trouver le nœud avec la plus petite heuristique
+        openSet.sort((a, b) => a.h - b.h);
+        const current = openSet.shift();
+        const currentKey = `${current.x},${current.y}`;
+        
+        if (visited.has(currentKey)) continue;
+        visited.add(currentKey);
+        visitedCount++;
+        
+        // Marquer comme visité
+        if (current.x !== startPos.x || current.y !== startPos.y) {
+            maze[current.y][current.x] = CELL_TYPES.VISITED;
+            drawMaze(panel);
+            await sleep(5);
+        }
+        
+        // Objectif atteint
+        if (current.x === endPos.x && current.y === endPos.y) {
+            const path = reconstructPath(cameFrom, endPos);
+            return { path, visitedCount };
+        }
+        
+        // Explorer les voisins
+        for (const neighbor of getNeighbors(panel, current.x, current.y)) {
+            const neighborKey = `${neighbor.x},${neighbor.y}`;
+            if (!visited.has(neighborKey)) {
+                visited.add(neighborKey);
+                const h = manhattanDistance(neighbor.x, neighbor.y, endPos.x, endPos.y);
+                cameFrom.set(neighborKey, currentKey);
+                openSet.push({ ...neighbor, h });
+            }
+        }
+    }
+    
+    return { path: null, visitedCount };
 }
 
 // ========================================
