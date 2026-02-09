@@ -14,7 +14,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/maze/generate")
-@CrossOrigin(origins = "*")
 public class MazeGenerationController {
     
     @Autowired
