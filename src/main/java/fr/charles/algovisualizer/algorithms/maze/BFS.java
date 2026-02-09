@@ -35,7 +35,9 @@ public class BFS implements MazeAlgorithm {
     public MazeResult solve(int[][] maze, int startX, int startY, int endX, int endY) {
         long startTime = System.currentTimeMillis();
         
-        // TODO: Implémenter l'algorithme BFS ici
+        // ========================================
+        // À IMPLÉMENTER : Algorithme BFS
+        // ========================================
         
         // 1. Créer une file (Queue) pour stocker les positions à explorer
         Queue<Position> queue = new LinkedList<>();
@@ -55,21 +57,25 @@ public class BFS implements MazeAlgorithm {
         
         // 5. Tant que la file n'est pas vide
         while (!queue.isEmpty()) {
-            // TODO: Défiler la première position
-            Position current = null; // À COMPLÉTER
+            // ÉTAPE 1: Défiler la première position
+            Position current = queue.poll();
             
             visitedCount++;
             
-            // TODO: Vérifier si on a atteint l'arrivée
-            // Si oui, reconstruire le chemin et le retourner
+            // ÉTAPE 2: Vérifier si on a atteint l'arrivée
+            if (current.x == endX && current.y == endY) {
+                return new MazeResult(reconstructPath(cameFrom, current), visitedCount, System.currentTimeMillis() - startTime);
+            }
             
-            // TODO: Explorer les 4 voisins (haut, bas, gauche, droite)
-            // Pour chaque voisin valide et non visité:
-            //   - Le marquer comme visité
-            //   - L'ajouter à la file
-            //   - Enregistrer son parent dans cameFrom
-            
-            // Utiliser getNeighbors(maze, current.x, current.y) pour obtenir les voisins
+            // ÉTAPE 3: Explorer les 4 voisins (haut, bas, gauche, droite)
+            List<Position> neighbors = getNeighbors(maze, current.x, current.y);
+            for (Position neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    queue.offer(neighbor);
+                    cameFrom.put(neighbor, current);
+                }
+            }
         }
         
         // 6. Si on arrive ici, aucun chemin n'a été trouvé
@@ -79,15 +85,20 @@ public class BFS implements MazeAlgorithm {
     
     /**
      * Reconstruit le chemin depuis l'arrivée jusqu'au départ
+     * 
+     * À UTILISER dans votre implémentation:
+     * List<Position> path = reconstructPath(cameFrom, endPosition);
      */
+    @SuppressWarnings("unused")
     private List<Position> reconstructPath(Map<Position, Position> cameFrom, Position end) {
         List<Position> path = new ArrayList<>();
         Position current = end;
         
-        // TODO: Remonter le chemin depuis end jusqu'au départ
-        // en suivant cameFrom
-        
-        // VOTRE CODE ICI
+        // Remonter le chemin depuis end jusqu'au départ en suivant cameFrom
+        while (current != null && cameFrom.containsKey(current)) {
+            path.add(current);
+            current = cameFrom.get(current);
+        }
         
         // Inverser le chemin pour avoir départ -> arrivée
         Collections.reverse(path);
@@ -95,8 +106,12 @@ public class BFS implements MazeAlgorithm {
     }
     
     /**
-     * Retourne les voisins valides d'une position
+     * Retourne les voisins valides d'une position (haut, droite, bas, gauche)
+     * 
+     * À UTILISER dans votre implémentation:
+     * List<Position> neighbors = getNeighbors(maze, current.x, current.y);
      */
+    @SuppressWarnings("unused")
     private List<Position> getNeighbors(int[][] maze, int x, int y) {
         List<Position> neighbors = new ArrayList<>();
         int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}; // Haut, Droite, Bas, Gauche

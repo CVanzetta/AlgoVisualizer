@@ -37,7 +37,9 @@ public class Dijkstra implements MazeAlgorithm {
     public MazeResult solve(int[][] maze, int startX, int startY, int endX, int endY) {
         long startTime = System.currentTimeMillis();
         
-        // TODO: Implémenter l'algorithme de Dijkstra ici
+        // ========================================
+        // À IMPLÉMENTER : Algorithme de Dijkstra
+        // ========================================
         
         // 1. Créer une PriorityQueue triée par distance
         PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingDouble(n -> n.distance));
@@ -62,27 +64,34 @@ public class Dijkstra implements MazeAlgorithm {
         
         // 6. Tant que la priority queue n'est pas vide
         while (!pq.isEmpty()) {
-            // TODO: Extraire le nœud avec la plus petite distance
-            Node currentNode = null; // À COMPLÉTER
-            Position current = null; // À COMPLÉTER
+            // ÉTAPE 1: Extraire le nœud avec la plus petite distance
+            Node currentNode = pq.poll();
+            Position current = currentNode.position;
             
-            // TODO: Si déjà visité, skip
+            // ÉTAPE 2: Si déjà visité, skip
+            if (visited.contains(current)) continue;
             
             visitedCount++;
             visited.add(current);
             
-            // TODO: Vérifier si on a atteint l'arrivée
+            // ÉTAPE 3: Vérifier si on a atteint l'arrivée
+            if (current.x == endX && current.y == endY) {
+                return new MazeResult(reconstructPath(cameFrom, current), visitedCount, System.currentTimeMillis() - startTime);
+            }
             
-            // TODO: Pour chaque voisin
-            // List<Position> neighbors = getNeighbors(maze, current.x, current.y);
-            // Pour chaque neighbor:
-            //   - Si déjà visité, skip
-            //   - Calculer newDistance = distance[current] + 1
-            //   - Si newDistance < distance[neighbor]:
-            //     * Mettre à jour distance et cameFrom
-            //     * Ajouter neighbor à la priority queue
-            
-            // VOTRE CODE ICI
+            // ÉTAPE 4: Pour chaque voisin
+            List<Position> neighbors = getNeighbors(maze, current.x, current.y);
+            for (Position neighbor : neighbors) {
+                if (visited.contains(neighbor)) continue;
+                
+                double newDistance = distance.get(current) + 1;
+                
+                if (!distance.containsKey(neighbor) || newDistance < distance.get(neighbor)) {
+                    distance.put(neighbor, newDistance);
+                    cameFrom.put(neighbor, current);
+                    pq.offer(new Node(neighbor, newDistance));
+                }
+            }
         }
         
         // Aucun chemin trouvé
@@ -106,11 +115,15 @@ public class Dijkstra implements MazeAlgorithm {
     /**
      * Reconstruit le chemin
      */
+    @SuppressWarnings("unused")
     private List<Position> reconstructPath(Map<Position, Position> cameFrom, Position end) {
         List<Position> path = new ArrayList<>();
+        Position current = end;
         
-        // TODO: Implémenter
-        // VOTRE CODE ICI
+        while (current != null && cameFrom.containsKey(current)) {
+            path.add(current);
+            current = cameFrom.get(current);
+        }
         
         Collections.reverse(path);
         return path;
@@ -119,6 +132,7 @@ public class Dijkstra implements MazeAlgorithm {
     /**
      * Retourne les voisins valides
      */
+    @SuppressWarnings("unused")
     private List<Position> getNeighbors(int[][] maze, int x, int y) {
         List<Position> neighbors = new ArrayList<>();
         int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
