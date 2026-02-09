@@ -465,47 +465,6 @@ function bfsCompute(panel) {
     return { path: null, visitedCells, visitedCount };
 }
 
-async function bfs(panel) {
-    const maze = panel === 1 ? state.maze1 : state.maze2;
-    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
-    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
-    
-    const queue = [startPos];
-    const visited = new Set([`${startPos.x},${startPos.y}`]);
-    const cameFrom = new Map();
-    let visitedCount = 0;
-    
-    while (queue.length > 0) {
-        const current = queue.shift();
-        visitedCount++;
-        
-        // Marquer comme visité
-        if (current.x !== startPos.x || current.y !== startPos.y) {
-            maze[current.y][current.x] = CELL_TYPES.VISITED;
-            drawMaze(panel);
-            await sleep(5);
-        }
-        
-        // Objectif atteint
-        if (current.x === endPos.x && current.y === endPos.y) {
-            const path = reconstructPath(cameFrom, endPos);
-            return { path, visitedCount };
-        }
-        
-        // Explorer les voisins
-        for (const neighbor of getNeighbors(panel, current.x, current.y)) {
-            const key = `${neighbor.x},${neighbor.y}`;
-            if (!visited.has(key)) {
-                visited.add(key);
-                cameFrom.set(key, `${current.x},${current.y}`);
-                queue.push(neighbor);
-            }
-        }
-    }
-    
-    return { path: null, visitedCount };
-}
-
 // DFS - Computation only (no animation)
 function dfsCompute(panel) {
     const maze = panel === 1 ? state.maze1 : state.maze2;
@@ -541,56 +500,6 @@ function dfsCompute(panel) {
     }
     
     return { path: null, visitedCells, visitedCount };
-}
-
-async function dfs(panel) {
-    const maze = panel === 1 ? state.maze1 : state.maze2;
-    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
-    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
-    
-    const stack = [startPos];
-    const visited = new Set([`${startPos.x},${startPos.y}`]);
-    const cameFrom = new Map();
-    let visitedCount = 0;
-    
-    while (stack.length > 0) {
-        const current = stack.pop();
-        visitedCount++;
-        
-        // Marquer comme visité
-        if (current.x !== startPos.x || current.y !== startPos.y) {
-            maze[current.y][current.x] = CELL_TYPES.VISITED;
-            drawMaze(panel);
-            await sleep(5);
-        }
-        
-        // Objectif atteint
-        if (current.x === endPos.x && current.y === endPos.y) {
-            const path = reconstructPath(cameFrom, endPos);
-            return { path, visitedCount };
-        }
-        
-        // Explorer les voisins
-        for (const neighbor of getNeighbors(panel, current.x, current.y)) {
-            const key = `${neighbor.x},${neighbor.y}`;
-            if (!visited.has(key)) {
-                visited.add(key);
-                cameFrom.set(key, `${current.x},${current.y}`);
-                stack.push(neighbor);
-            }
-        }
-    }
-    
-    return { path: null, visitedCount };
-}
-
-// Helper: Mark cell as visited and update display
-async function markCellVisited(panel, x, y, startPos) {
-    if (x === startPos.x && y === startPos.y) return;
-    const maze = panel === 1 ? state.maze1 : state.maze2;
-    maze[y][x] = CELL_TYPES.VISITED;
-    drawMaze(panel);
-    await sleep(5);
 }
 
 // Helper: Process A* neighbor
@@ -644,42 +553,6 @@ function astarCompute(panel) {
     return { path: null, visitedCells, visitedCount };
 }
 
-async function astar(panel) {
-    const maze = panel === 1 ? state.maze1 : state.maze2;
-    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
-    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
-    
-    const openSet = [{ ...startPos, f: 0, g: 0 }];
-    const visited = new Set();
-    const cameFrom = new Map();
-    const gScore = new Map([[`${startPos.x},${startPos.y}`, 0]]);
-    let visitedCount = 0;
-    
-    while (openSet.length > 0) {
-        openSet.sort((a, b) => a.f - b.f);
-        const current = openSet.shift();
-        const currentKey = `${current.x},${current.y}`;
-        
-        if (visited.has(currentKey)) continue;
-        visited.add(currentKey);
-        visitedCount++;
-        
-        await markCellVisited(panel, current.x, current.y, startPos);
-        
-        if (current.x === endPos.x && current.y === endPos.y) {
-            return { path: reconstructPath(cameFrom, endPos), visitedCount };
-        }
-        
-        for (const neighbor of getNeighbors(panel, current.x, current.y)) {
-            const neighborKey = `${neighbor.x},${neighbor.y}`;
-            if (visited.has(neighborKey)) continue;
-            processAStarNeighbor(neighbor, current, endPos, gScore, cameFrom, openSet);
-        }
-    }
-    
-    return { path: null, visitedCount };
-}
-
 // Helper: Process Dijkstra neighbor
 function processDijkstraNeighbor(neighbor, current, distances, cameFrom, openSet) {
     const neighborKey = `${neighbor.x},${neighbor.y}`;
@@ -730,42 +603,6 @@ function dijkstraCompute(panel) {
     return { path: null, visitedCells, visitedCount };
 }
 
-async function dijkstra(panel) {
-    const maze = panel === 1 ? state.maze1 : state.maze2;
-    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
-    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
-    
-    const openSet = [{ ...startPos, dist: 0 }];
-    const visited = new Set();
-    const cameFrom = new Map();
-    const distances = new Map([[`${startPos.x},${startPos.y}`, 0]]);
-    let visitedCount = 0;
-    
-    while (openSet.length > 0) {
-        openSet.sort((a, b) => a.dist - b.dist);
-        const current = openSet.shift();
-        const currentKey = `${current.x},${current.y}`;
-        
-        if (visited.has(currentKey)) continue;
-        visited.add(currentKey);
-        visitedCount++;
-        
-        await markCellVisited(panel, current.x, current.y, startPos);
-        
-        if (current.x === endPos.x && current.y === endPos.y) {
-            return { path: reconstructPath(cameFrom, endPos), visitedCount };
-        }
-        
-        for (const neighbor of getNeighbors(panel, current.x, current.y)) {
-            const neighborKey = `${neighbor.x},${neighbor.y}`;
-            if (visited.has(neighborKey)) continue;
-            processDijkstraNeighbor(neighbor, current, distances, cameFrom, openSet);
-        }
-    }
-    
-    return { path: null, visitedCount };
-}
-
 // Greedy Best First - Computation only (no animation)
 function greedyBestFirstCompute(panel) {
     const maze = panel === 1 ? state.maze1 : state.maze2;
@@ -808,54 +645,6 @@ function greedyBestFirstCompute(panel) {
     }
     
     return { path: null, visitedCells, visitedCount };
-}
-
-async function greedyBestFirst(panel) {
-    const maze = panel === 1 ? state.maze1 : state.maze2;
-    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
-    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
-    
-    const openSet = [{ ...startPos, h: 0 }];
-    const visited = new Set();
-    const cameFrom = new Map();
-    let visitedCount = 0;
-    
-    while (openSet.length > 0) {
-        // Trouver le nœud avec la plus petite heuristique
-        openSet.sort((a, b) => a.h - b.h);
-        const current = openSet.shift();
-        const currentKey = `${current.x},${current.y}`;
-        
-        if (visited.has(currentKey)) continue;
-        visited.add(currentKey);
-        visitedCount++;
-        
-        // Marquer comme visité
-        if (current.x !== startPos.x || current.y !== startPos.y) {
-            maze[current.y][current.x] = CELL_TYPES.VISITED;
-            drawMaze(panel);
-            await sleep(5);
-        }
-        
-        // Objectif atteint
-        if (current.x === endPos.x && current.y === endPos.y) {
-            const path = reconstructPath(cameFrom, endPos);
-            return { path, visitedCount };
-        }
-        
-        // Explorer les voisins
-        for (const neighbor of getNeighbors(panel, current.x, current.y)) {
-            const neighborKey = `${neighbor.x},${neighbor.y}`;
-            if (!visited.has(neighborKey)) {
-                visited.add(neighborKey);
-                const h = manhattanDistance(neighbor.x, neighbor.y, endPos.x, endPos.y);
-                cameFrom.set(neighborKey, currentKey);
-                openSet.push({ ...neighbor, h });
-            }
-        }
-    }
-    
-    return { path: null, visitedCount };
 }
 
 // ========================================
