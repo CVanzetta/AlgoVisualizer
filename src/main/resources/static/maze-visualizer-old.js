@@ -485,7 +485,6 @@ async function dijkstra() {
     const priorityQueue = [];
     const distance = new Map();
     const visited = new Set();
-    const cameFrom = new Map();
     let visitedCount = 0;
     
     // VOTRE CODE ICI
