@@ -50,7 +50,7 @@ public class WilsonGenerator implements MazeGenerator {
     }
     
     @Override
-    @SuppressWarnings({"java:S3776", "java:S1541"})
+    @SuppressWarnings({"java:S3776", "java:S1541", "java:S6541"})
     public int[][] generate(int width, int height) {
         // Initialiser toutes les cellules comme des murs
         int[][] maze = new int[height][width];

@@ -21,7 +21,7 @@
         <option value="radix-sort">Radix Sort</option>
     </select>
     <br><br>
-    <label>Nombre d'éléments :</label><br>
+    <span class="label-text">Nombre d'éléments :</span><br>
     <button class="size-btn" onclick="startSorting(15)">15</button>
     <button class="size-btn" onclick="startSorting(50)">50</button>
     <button class="size-btn" onclick="startSorting(100)">100</button>
@@ -32,7 +32,7 @@
     <button class="size-btn" onclick="startSorting(10000)" id="btn-10000" style="background: linear-gradient(135deg, #ff6a88 0%, #ee0979 100%);">10000 🔥</button>
 </div>
 <div class="controls-row">
-    <label class="play-pause-container" id="playPauseBtn" style="display: none;">
+    <label class="play-pause-container" id="playPauseBtn" style="display: none;" aria-label="Play/Pause animation">
         <input type="checkbox" id="playPauseInput" onchange="togglePlayPause()">
         <svg viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="play">
             <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path>
