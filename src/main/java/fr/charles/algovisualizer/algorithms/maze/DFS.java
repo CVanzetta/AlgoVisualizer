@@ -36,10 +36,12 @@ public class DFS implements MazeAlgorithm {
     public MazeResult solve(int[][] maze, int startX, int startY, int endX, int endY) {
         long startTime = System.currentTimeMillis();
         
-        // TODO: Implémenter l'algorithme DFS ici
+        // ========================================
+        // À IMPLÉMENTER : Algorithme DFS
+        // ========================================
         
-        // 1. Créer une pile (Stack) pour stocker les positions à explorer
-        Stack<Position> stack = new Stack<>();
+        // 1. Créer une pile (Deque) pour stocker les positions à explorer
+        Deque<Position> stack = new ArrayDeque<>();
         
         // 2. Créer un Set pour marquer les positions visitées
         Set<Position> visited = new HashSet<>();
@@ -56,20 +58,25 @@ public class DFS implements MazeAlgorithm {
         
         // 5. Tant que la pile n'est pas vide
         while (!stack.isEmpty()) {
-            // TODO: Dépiler la dernière position (au lieu de défiler comme BFS)
-            Position current = null; // À COMPLÉTER
+            // ÉTAPE 1: Dépiler la dernière position (LIFO au lieu de FIFO comme BFS)
+            Position current = stack.pop();
             
             visitedCount++;
             
-            // TODO: Vérifier si on a atteint l'arrivée
+            // ÉTAPE 2: Vérifier si on a atteint l'arrivée
+            if (current.x == endX && current.y == endY) {
+                return new MazeResult(reconstructPath(cameFrom, current), visitedCount, System.currentTimeMillis() - startTime);
+            }
             
-            // TODO: Explorer les 4 voisins
-            // Pour chaque voisin valide et non visité:
-            //   - Le marquer comme visité
-            //   - L'ajouter à la pile (au lieu de la file comme BFS)
-            //   - Enregistrer son parent
-            
-            // VOTRE CODE ICI
+            // ÉTAPE 3: Explorer les 4 voisins
+            List<Position> neighbors = getNeighbors(maze, current.x, current.y);
+            for (Position neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    stack.push(neighbor);
+                    cameFrom.put(neighbor, current);
+                }
+            }
         }
         
         // Aucun chemin trouvé
@@ -78,13 +85,17 @@ public class DFS implements MazeAlgorithm {
     }
     
     /**
-     * Reconstruit le chemin
+     * Reconstruit le chemin depuis l'arrivée jusqu'au départ
      */
+    @SuppressWarnings("unused")
     private List<Position> reconstructPath(Map<Position, Position> cameFrom, Position end) {
         List<Position> path = new ArrayList<>();
+        Position current = end;
         
-        // TODO: Implémenter
-        // VOTRE CODE ICI
+        while (current != null && cameFrom.containsKey(current)) {
+            path.add(current);
+            current = cameFrom.get(current);
+        }
         
         Collections.reverse(path);
         return path;
@@ -93,6 +104,7 @@ public class DFS implements MazeAlgorithm {
     /**
      * Retourne les voisins valides
      */
+    @SuppressWarnings("unused")
     private List<Position> getNeighbors(int[][] maze, int x, int y) {
         List<Position> neighbors = new ArrayList<>();
         int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};

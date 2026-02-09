@@ -39,7 +39,9 @@ public class AStar implements MazeAlgorithm {
     public MazeResult solve(int[][] maze, int startX, int startY, int endX, int endY) {
         long startTime = System.currentTimeMillis();
         
-        // TODO: Implémenter l'algorithme A* ici
+        // ========================================
+        // À IMPLÉMENTER : Algorithme A*
+        // ========================================
         
         // 1. Créer une PriorityQueue triée par f_score
         PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingDouble(n -> n.fScore));
@@ -64,27 +66,35 @@ public class AStar implements MazeAlgorithm {
         
         // 5. Tant que openSet n'est pas vide
         while (!openSet.isEmpty()) {
-            // TODO: Extraire le nœud avec le plus petit f_score
-            Node currentNode = null; // À COMPLÉTER
-            Position current = null; // À COMPLÉTER
+            // ÉTAPE 1: Extraire le nœud avec le plus petit f_score
+            Node currentNode = openSet.poll();
+            Position current = currentNode.position;
             
             visitedCount++;
             
-            // TODO: Vérifier si on a atteint l'arrivée
+            // ÉTAPE 2: Vérifier si on a atteint l'arrivée
+            if (current.x == endX && current.y == endY) {
+                return new MazeResult(reconstructPath(cameFrom, current), visitedCount, System.currentTimeMillis() - startTime);
+            }
             
-            // TODO: Marquer comme traité
-            // closedSet.add(current);
+            // ÉTAPE 3: Marquer comme traité
+            closedSet.add(current);
             
-            // TODO: Pour chaque voisin
-            // List<Position> neighbors = getNeighbors(maze, current.x, current.y);
-            // Pour chaque neighbor:
-            //   - Si dans closedSet, skip
-            //   - Calculer tentative_gScore = gScore[current] + 1
-            //   - Si tentative_gScore < gScore[neighbor]:
-            //     * Mettre à jour cameFrom, gScore et fScore
-            //     * Ajouter neighbor à openSet si pas déjà dedans
-            
-            // VOTRE CODE ICI
+            // ÉTAPE 4: Pour chaque voisin
+            List<Position> neighbors = getNeighbors(maze, current.x, current.y);
+            for (Position neighbor : neighbors) {
+                if (closedSet.contains(neighbor)) continue;
+                
+                double tentativeGScore = gScore.get(current) + 1;
+                
+                if (!gScore.containsKey(neighbor) || tentativeGScore < gScore.get(neighbor)) {
+                    cameFrom.put(neighbor, current);
+                    gScore.put(neighbor, tentativeGScore);
+                    double fScoreValue = tentativeGScore + heuristic(neighbor.x, neighbor.y, endX, endY);
+                    fScore.put(neighbor, fScoreValue);
+                    openSet.offer(new Node(neighbor, fScoreValue));
+                }
+            }
         }
         
         // Aucun chemin trouvé
@@ -94,13 +104,10 @@ public class AStar implements MazeAlgorithm {
     
     /**
      * Fonction heuristique : distance de Manhattan
+     * h(n) = |x1 - x2| + |y1 - y2|
      */
     private double heuristic(int x1, int y1, int x2, int y2) {
-        // TODO: Implémenter la distance de Manhattan
-        // return Math.abs(x1 - x2) + Math.abs(y1 - y2);
-        
-        // VOTRE CODE ICI
-        return 0.0;
+        return (double) Math.abs(x1 - x2) + Math.abs(y1 - y2);
     }
     
     /**
@@ -119,11 +126,15 @@ public class AStar implements MazeAlgorithm {
     /**
      * Reconstruit le chemin
      */
+    @SuppressWarnings("unused")
     private List<Position> reconstructPath(Map<Position, Position> cameFrom, Position end) {
         List<Position> path = new ArrayList<>();
+        Position current = end;
         
-        // TODO: Implémenter la reconstruction du chemin
-        // VOTRE CODE ICI
+        while (current != null && cameFrom.containsKey(current)) {
+            path.add(current);
+            current = cameFrom.get(current);
+        }
         
         Collections.reverse(path);
         return path;
@@ -132,6 +143,7 @@ public class AStar implements MazeAlgorithm {
     /**
      * Retourne les voisins valides
      */
+    @SuppressWarnings("unused")
     private List<Position> getNeighbors(int[][] maze, int x, int y) {
         List<Position> neighbors = new ArrayList<>();
         int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
