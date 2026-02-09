@@ -516,7 +516,6 @@ async function greedyBestFirst() {
     //      * Ajouter à la queue triée
     //      * Visualiser
     
-    const priorityQueue = [];
     const visited = new Set();
     const cameFrom = new Map();
     let visitedCount = 0;
