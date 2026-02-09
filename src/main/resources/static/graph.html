@@ -3,10 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlgoVisualizer - Accueil</title>
+    <title>Algorithmes de Graphe</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .home-container {
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .coming-soon {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -15,115 +35,32 @@
             padding: 20px;
         }
 
-        .home-title {
-            font-size: 3.5em;
+        .coming-soon h1 {
+            font-size: 3em;
             margin-bottom: 20px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .home-subtitle {
+        .coming-soon p {
             font-size: 1.3em;
-            margin-bottom: 60px;
             opacity: 0.8;
         }
 
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            width: 100%;
+        .graph-icon {
+            font-size: 8em;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
         }
 
-        .algo-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 40px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: white;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .algo-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.1);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .algo-card:hover::before {
-            opacity: 1;
-        }
-
-        .algo-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .algo-card.sorting {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .algo-card.graph {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .algo-card.maze {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-
-        .card-icon {
-            font-size: 4em;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 2em;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .card-description {
-            font-size: 1.1em;
-            line-height: 1.6;
-            opacity: 0.9;
-        }
-
-        body.dark-mode .home-title {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        @media (max-width: 768px) {
-            .home-title {
-                font-size: 2.5em;
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
             }
-
-            .home-subtitle {
-                font-size: 1.1em;
-            }
-
-            .cards-container {
-                grid-template-columns: 1fr;
-            }
-
-            .card-title {
-                font-size: 1.5em;
+            50% {
+                transform: translateY(-20px);
             }
         }
     </style>
@@ -189,35 +126,13 @@
         </label>
     </div>
 
-    <div class="home-container">
-        <h1 class="home-title">AlgoVisualizer</h1>
-        <p class="home-subtitle">Visualisez et comprenez les algorithmes en action</p>
+    <a href="index.html" class="back-button">← Retour</a>
 
-        <div class="cards-container">
-            <a href="sorting.html" class="algo-card sorting">
-                <div class="card-icon">🔢</div>
-                <div class="card-title">Algorithmes de Tri</div>
-                <div class="card-description">
-                    Visualisez les algorithmes de tri classiques : Bubble Sort, Quick Sort, Merge Sort, et plus encore.
-                </div>
-            </a>
-
-            <a href="graph.html" class="algo-card graph">
-                <div class="card-icon">🗺️</div>
-                <div class="card-title">Algorithmes de Graphe</div>
-                <div class="card-description">
-                    Explorez les algorithmes de parcours et de recherche de chemin optimal comme Dijkstra.
-                </div>
-            </a>
-
-            <a href="maze.html" class="algo-card maze">
-                <div class="card-icon">🧩</div>
-                <div class="card-title">Résolution de Labyrinthes</div>
-                <div class="card-description">
-                    Découvrez les algorithmes de résolution de labyrinthes : A*, BFS, DFS et bien d'autres.
-                </div>
-            </a>
-        </div>
+    <div class="coming-soon">
+        <div class="graph-icon">🗺️</div>
+        <h1>Algorithmes de Graphe</h1>
+        <p>Cette fonctionnalité sera bientôt disponible !</p>
+        <p style="margin-top: 20px; font-size: 1em;">Algorithmes à venir : Dijkstra, BFS, DFS, A*...</p>
     </div>
 
     <script>

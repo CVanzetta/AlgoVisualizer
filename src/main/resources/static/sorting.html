@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Visualizer</title>
+    <link rel="stylesheet" href="styles.css?v=7">
+    <style>
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="light-mode">
+<div class="theme-switch-container">
+    <label class="switch">
+        <input id="input" type="checkbox" onchange="toggleTheme()" />
+        <div class="slider round">
+            <div class="sun-moon">
+                <svg id="moon-dot-1" class="moon-dot" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="moon-dot-2" class="moon-dot" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="moon-dot-3" class="moon-dot" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="light-ray-1" class="light-ray" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="light-ray-2" class="light-ray" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="light-ray-3" class="light-ray" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="cloud-1" class="cloud-dark" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="cloud-2" class="cloud-dark" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="cloud-3" class="cloud-dark" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="cloud-4" class="cloud-light" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="cloud-5" class="cloud-light" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+                <svg id="cloud-6" class="cloud-light" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50"></circle>
+                </svg>
+            </div>
+            <div class="stars">
+                <svg id="star-1" class="star" viewBox="0 0 20 20">
+                    <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
+                </svg>
+                <svg id="star-2" class="star" viewBox="0 0 20 20">
+                    <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
+                </svg>
+                <svg id="star-3" class="star" viewBox="0 0 20 20">
+                    <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
+                </svg>
+                <svg id="star-4" class="star" viewBox="0 0 20 20">
+                    <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
+                </svg>
+            </div>
+        </div>
+    </label>
+</div>
+<a href="index.html" class="back-button">← Retour</a>
+<h1>Sorting Visualizer</h1>
+<div id="controls">
+    <select id="algorithm">
+        <option value="bubble-sort">Bubble Sort</option>
+        <option value="quick-sort">Quick Sort</option>
+        <option value="insertion-sort">Insertion Sort</option>
+        <option value="merge-sort">Merge Sort</option>
+        <option value="shell-sort">Shell Sort</option>
+        <option value="bucket-sort">Bucket Sort</option>
+        <option value="radix-sort">Radix Sort</option>
+    </select>
+    <br><br>
+    <label>Nombre d'éléments :</label><br>
+    <button class="size-btn" onclick="startSorting(15)">15</button>
+    <button class="size-btn" onclick="startSorting(50)">50</button>
+    <button class="size-btn" onclick="startSorting(100)">100</button>
+    <button class="size-btn" onclick="startSorting(250)">250</button>
+    <button class="size-btn" onclick="startSorting(500)">500</button>
+    <button class="size-btn" onclick="startSorting(1000)" id="btn-1000">1000</button>
+    <button class="size-btn" onclick="startSorting(5000)" id="btn-5000" style="background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%);">5000 ⚠️</button>
+    <button class="size-btn" onclick="startSorting(10000)" id="btn-10000" style="background: linear-gradient(135deg, #ff6a88 0%, #ee0979 100%);">10000 🔥</button>
+</div>
+<div class="controls-row">
+    <label class="play-pause-container" id="playPauseBtn" style="display: none;">
+        <input type="checkbox" id="playPauseInput" onchange="togglePlayPause()">
+        <svg viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="play">
+            <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path>
+        </svg>
+        <svg viewBox="0 0 320 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="pause">
+            <path d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"></path>
+        </svg>
+    </label>
+    <button class="stop-btn" id="stopBtn" onclick="stopSorting()" style="display: none;">⏹ Stop</button>
+</div>
+<div class="timer-container" id="timerDisplay" style="display: none;">
+    <div class="status ready" id="status">Ready</div>
+    <div>Time: <span id="timer">0.00s</span></div>
+</div>
+<canvas id="canvas" width="800" height="400"></canvas>
+<script>
+function toggleTheme() {
+    const body = document.body;
+    const checkbox = document.getElementById('input');
+    if (checkbox.checked) {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+// Charger le thème sauvegardé au démarrage
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const checkbox = document.getElementById('input');
+    if (savedTheme === 'dark') {
+        checkbox.checked = true;
+        document.body.classList.remove('light-mode');
+        document.body.classList.add('dark-mode');
+    }
+});
+</script>
+<script src="visualizer.js?v=11"></script>
+</body>
+</html>
