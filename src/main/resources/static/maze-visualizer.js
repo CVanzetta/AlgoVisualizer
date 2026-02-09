@@ -56,32 +56,32 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function initMazes() {
-    console.log('🚀 Initialisation des labyrinthes...');
+    console.log('Initialisation des labyrinthes...');
     
     // Canvas 1
     state.canvas1 = document.getElementById('mazeCanvas1');
     if (!state.canvas1) {
-        console.error('❌ Canvas 1 introuvable !');
+        console.error('Canvas 1 introuvable !');
         return;
     }
     state.ctx1 = state.canvas1.getContext('2d');
     state.maze1 = createEmptyMaze();
-    console.log('✅ Canvas 1 initialisé');
+    console.log('Canvas 1 initialise');
     
     // Canvas 2
     state.canvas2 = document.getElementById('mazeCanvas2');
     if (!state.canvas2) {
-        console.error('❌ Canvas 2 introuvable !');
+        console.error('Canvas 2 introuvable !');
         return;
     }
     state.ctx2 = state.canvas2.getContext('2d');
     state.maze2 = createEmptyMaze();
-    console.log('✅ Canvas 2 initialisé');
+    console.log('Canvas 2 initialise');
     
     // Dessiner les deux labyrinthes
     drawMaze(1);
     drawMaze(2);
-    console.log('✅ Labyrinthes dessinés');
+    console.log('Labyrinthes dessines');
 }
 
 function createEmptyMaze() {
@@ -96,10 +96,10 @@ function createEmptyMaze() {
 }
 
 function setupEventListeners() {
-    console.log('🎮 Configuration des event listeners...');
+    console.log('Configuration des event listeners...');
     
     if (!state.canvas1 || !state.canvas2) {
-        console.error('❌ Canvas non initialisés, event listeners non configurés');
+        console.error('Canvas non initialises, event listeners non configures');
         return;
     }
     
@@ -115,7 +115,7 @@ function setupEventListeners() {
     state.canvas2.addEventListener('mouseup', () => handleMouseUp(2));
     state.canvas2.addEventListener('mouseleave', () => handleMouseUp(2));
     
-    console.log('✅ Event listeners configurés');
+    console.log('Event listeners configures');
 }
 
 // ========================================
@@ -329,17 +329,15 @@ function copyMaze1To2() {
     document.getElementById('generator2').value = document.getElementById('generator1').value;
     
     drawMaze(2);
-    console.log('Labyrinthe 1 dupliqué vers labyrinthe 2');
+    console.log('Labyrinthe 1 duplique vers labyrinthe 2');
 }
 
 // ========================================
-// RÉSOLUTION DE LABYRINTHE
-// ========================================
-// RÉSOLUTION DE LABYRINTHE
+// RESOLUTION DE LABYRINTHE
 // ========================================
 
 async function solveMaze(panel) {
-    console.log(`🔍 Début résolution panel ${panel}`);
+    console.log('Debut resolution panel ' + panel);
     
     try {
         const solverSelect = document.getElementById(`solver${panel}`);
@@ -348,7 +346,7 @@ async function solveMaze(panel) {
         const startPos = panel === 1 ? state.startPos1 : state.startPos2;
         const endPos = panel === 1 ? state.endPos1 : state.endPos2;
         
-        console.log(`Algorithme: ${algorithm}, Départ: (${startPos.x},${startPos.y}), Arrivée: (${endPos.x},${endPos.y})`);
+        console.log('Algorithme: ' + algorithm + ', Depart: (' + startPos.x + ',' + startPos.y + '), Arrivee: (' + endPos.x + ',' + endPos.y + ')');
         
         if (panel === 1) state.isRunning1 = true;
         else state.isRunning2 = true;
@@ -362,41 +360,41 @@ async function solveMaze(panel) {
         // Appeler l'algorithme approprié
         switch (algorithm) {
             case 'bfs':
-                console.log('🔵 Lancement BFS');
+                console.log('Lancement BFS');
                 ({ path, visitedCount } = await bfs(panel));
                 break;
             case 'dfs':
-                console.log('🟣 Lancement DFS');
+                console.log('Lancement DFS');
                 ({ path, visitedCount } = await dfs(panel));
                 break;
             case 'astar':
-                console.log('⭐ Lancement A*');
+                console.log('Lancement A*');
                 ({ path, visitedCount } = await astar(panel));
                 break;
             case 'dijkstra':
-                console.log('🔷 Lancement Dijkstra');
+                console.log('Lancement Dijkstra');
                 ({ path, visitedCount } = await dijkstra(panel));
                 break;
             case 'greedy':
-                console.log('🟢 Lancement Greedy');
+                console.log('Lancement Greedy');
                 ({ path, visitedCount } = await greedyBestFirst(panel));
                 break;
             default:
-                console.error(`❌ Algorithme inconnu: ${algorithm}`);
+                console.error('Algorithme inconnu: ' + algorithm);
                 return;
         }
         
         const endTime = performance.now();
         const executionTime = Math.round(endTime - startTime);
         
-        console.log(`✅ Résolution terminée: ${path ? path.length : 'Aucun'} cellules, ${visitedCount} explorées, ${executionTime}ms`);
+        console.log('Resolution terminee: ' + (path ? path.length : 'Aucun') + ' cellules, ' + visitedCount + ' explorees, ' + executionTime + 'ms');
         
         if (path) {
             await visualizePath(panel, path);
             document.getElementById(`pathLength${panel}`).textContent = path.length;
         } else {
             document.getElementById(`pathLength${panel}`).textContent = 'Aucun';
-            console.warn('⚠️ Aucun chemin trouvé !');
+            console.warn('Aucun chemin trouve !');
         }
         
         document.getElementById(`visitedCount${panel}`).textContent = visitedCount;
@@ -406,7 +404,7 @@ async function solveMaze(panel) {
         else state.isRunning2 = false;
         
     } catch (error) {
-        console.error('❌ Erreur lors de la résolution:', error);
+        console.error('Erreur lors de la resolution:', error);
         if (panel === 1) state.isRunning1 = false;
         else state.isRunning2 = false;
     }
