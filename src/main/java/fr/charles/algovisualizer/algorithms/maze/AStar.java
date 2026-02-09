@@ -39,7 +39,7 @@ public class AStar implements MazeAlgorithm {
     public MazeResult solve(int[][] maze, int startX, int startY, int endX, int endY) {
         long startTime = System.currentTimeMillis();
         
-        // Cas particulier : si départ == arrivée
+        // Cas particulier : si depart == arrivee
         if (startX == endX && startY == endY) {
             List<Position> path = new ArrayList<>();
             path.add(new Position(startX, startY));
