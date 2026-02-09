@@ -57,7 +57,9 @@ public class SidewinderGenerator implements MazeGenerator {
         return "Traitement ligne par ligne avec runs horizontaux (rapide, biais nord-est)";
     }
     
-    @Override    @SuppressWarnings("java:S3776")    public int[][] generate(int width, int height) {
+    @Override
+    @SuppressWarnings("java:S3776")
+    public int[][] generate(int width, int height) {
         // Initialiser toutes les cellules comme des murs
         int[][] maze = new int[height][width];
         for (int y = 0; y < height; y++) {
