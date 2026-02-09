@@ -5,72 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Résolution de Labyrinthes</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
-
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .coming-soon {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .coming-soon h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .coming-soon p {
-            font-size: 1.3em;
-            opacity: 0.8;
-        }
-
-        .maze-icon {
-            font-size: 8em;
-            margin-bottom: 30px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="common.css">
 </head>
 <body class="light-mode">
-    <a href="index.html" class="back-button">← Retour</a>
+    <a href="index.html" class="back-button maze">← Retour</a>
 
     <div class="coming-soon">
-        <div class="maze-icon">🧩</div>
-        <h1>Résolution de Labyrinthes</h1>
+        <div class="icon">🧩</div>
+        <h1 class="page-title maze">Résolution de Labyrinthes</h1>
         <p>Cette fonctionnalité sera bientôt disponible !</p>
         <p style="margin-top: 20px; font-size: 1em;">Algorithmes à venir : A*, BFS, DFS, Dijkstra...</p>
     </div>
