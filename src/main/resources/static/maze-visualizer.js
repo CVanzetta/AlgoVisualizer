@@ -412,7 +412,6 @@ async function solveMaze(panel) {
     try {
         const solverSelect = document.getElementById(`solver${panel}`);
         const algorithm = solverSelect.value;
-        const maze = panel === 1 ? state.maze1 : state.maze2;
         const startPos = panel === 1 ? state.startPos1 : state.startPos2;
         const endPos = panel === 1 ? state.endPos1 : state.endPos2;
         
