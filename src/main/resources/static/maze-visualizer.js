@@ -55,28 +55,25 @@ window.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 });
 
+// Helper: Initialize a single canvas
+function initCanvas(canvasId, canvasField, ctxField, mazeField) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+        console.error(canvasId + ' introuvable !');
+        return false;
+    }
+    state[canvasField] = canvas;
+    state[ctxField] = canvas.getContext('2d');
+    state[mazeField] = createEmptyMaze();
+    console.log(canvasId + ' initialise');
+    return true;
+}
+
 function initMazes() {
     console.log('Initialisation des labyrinthes...');
     
-    // Canvas 1
-    state.canvas1 = document.getElementById('mazeCanvas1');
-    if (!state.canvas1) {
-        console.error('Canvas 1 introuvable !');
-        return;
-    }
-    state.ctx1 = state.canvas1.getContext('2d');
-    state.maze1 = createEmptyMaze();
-    console.log('Canvas 1 initialise');
-    
-    // Canvas 2
-    state.canvas2 = document.getElementById('mazeCanvas2');
-    if (!state.canvas2) {
-        console.error('Canvas 2 introuvable !');
-        return;
-    }
-    state.ctx2 = state.canvas2.getContext('2d');
-    state.maze2 = createEmptyMaze();
-    console.log('Canvas 2 initialise');
+    if (!initCanvas('mazeCanvas1', 'canvas1', 'ctx1', 'maze1')) return;
+    if (!initCanvas('mazeCanvas2', 'canvas2', 'ctx2', 'maze2')) return;
     
     // Dessiner les deux labyrinthes
     drawMaze(1);
@@ -122,41 +119,32 @@ function setupEventListeners() {
 // DESSIN DU LABYRINTHE
 // ========================================
 
+// Helper: Determine color based on cell position and type
+function getCellColor(x, y, cellType, startPos, endPos) {
+    if (x === startPos.x && y === startPos.y) return COLORS.START;
+    if (x === endPos.x && y === endPos.y) return COLORS.END;
+    if (cellType === CELL_TYPES.WALL) return COLORS.WALL;
+    if (cellType === CELL_TYPES.VISITED) return COLORS.VISITED;
+    if (cellType === CELL_TYPES.PATH) return COLORS.PATH;
+    if (cellType === CELL_TYPES.CURRENT) return COLORS.CURRENT;
+    return COLORS.EMPTY;
+}
+
 function drawMaze(panel) {
     const maze = panel === 1 ? state.maze1 : state.maze2;
     const ctx = panel === 1 ? state.ctx1 : state.ctx2;
     const startPos = panel === 1 ? state.startPos1 : state.startPos2;
     const endPos = panel === 1 ? state.endPos1 : state.endPos2;
     
-    // Effacer le canvas
     ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
     
-    // Dessiner chaque cellule
     for (let y = 0; y < GRID_SIZE; y++) {
         for (let x = 0; x < GRID_SIZE; x++) {
-            const cellType = maze[y][x];
+            const color = getCellColor(x, y, maze[y][x], startPos, endPos);
             
-            // Couleur de base
-            let color = COLORS.EMPTY;
-            if (x === startPos.x && y === startPos.y) {
-                color = COLORS.START;
-            } else if (x === endPos.x && y === endPos.y) {
-                color = COLORS.END;
-            } else if (cellType === CELL_TYPES.WALL) {
-                color = COLORS.WALL;
-            } else if (cellType === CELL_TYPES.VISITED) {
-                color = COLORS.VISITED;
-            } else if (cellType === CELL_TYPES.PATH) {
-                color = COLORS.PATH;
-            } else if (cellType === CELL_TYPES.CURRENT) {
-                color = COLORS.CURRENT;
-            }
-            
-            // Dessiner la cellule
             ctx.fillStyle = color;
             ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
             
-            // Grille
             ctx.strokeStyle = '#E0E0E0';
             ctx.strokeRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         }
@@ -174,6 +162,11 @@ function handleMouseDown(e, panel) {
     handleMouseMove(e, panel);
 }
 
+// Helper: Check if position is start or end point
+function isSpecialPosition(x, y, startPos, endPos) {
+    return (x === startPos.x && y === startPos.y) || (x === endPos.x && y === endPos.y);
+}
+
 function handleMouseMove(e, panel) {
     const isDrawing = panel === 1 ? state.isDrawing1 : state.isDrawing2;
     if (!isDrawing) return;
@@ -185,24 +178,17 @@ function handleMouseMove(e, panel) {
     const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
     const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
     
-    if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
-        const startPos = panel === 1 ? state.startPos1 : state.startPos2;
-        const endPos = panel === 1 ? state.endPos1 : state.endPos2;
-        
-        // Ne pas dessiner sur départ/arrivée
-        if ((x === startPos.x && y === startPos.y) || (x === endPos.x && y === endPos.y)) {
-            return;
-        }
-        
-        // Toggle mur
-        if (maze[y][x] === CELL_TYPES.WALL) {
-            maze[y][x] = CELL_TYPES.EMPTY;
-        } else {
-            maze[y][x] = CELL_TYPES.WALL;
-        }
-        
-        drawMaze(panel);
-    }
+    const isInBounds = x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE;
+    if (!isInBounds) return;
+    
+    const startPos = panel === 1 ? state.startPos1 : state.startPos2;
+    const endPos = panel === 1 ? state.endPos1 : state.endPos2;
+    
+    if (isSpecialPosition(x, y, startPos, endPos)) return;
+    
+    // Toggle wall
+    maze[y][x] = maze[y][x] === CELL_TYPES.WALL ? CELL_TYPES.EMPTY : CELL_TYPES.WALL;
+    drawMaze(panel);
 }
 
 function handleMouseUp(panel) {
@@ -263,9 +249,12 @@ function generateMazeLocal(panel) {
     const endPos = panel === 1 ? state.endPos1 : state.endPos2;
     
     // Génération aléatoire simple (fallback)
+    // NOSONAR javascript:S2245 - Math.random() est sûr ici car utilisé uniquement
+    // pour la génération de labyrinthes à des fins de visualisation éducative,
+    // pas pour de la cryptographie ou de la sécurité
     for (let y = 0; y < GRID_SIZE; y++) {
         for (let x = 0; x < GRID_SIZE; x++) {
-            maze[y][x] = Math.random() < 0.3 ? CELL_TYPES.WALL : CELL_TYPES.EMPTY;
+            maze[y][x] = Math.random() < 0.3 ? CELL_TYPES.WALL : CELL_TYPES.EMPTY; // NOSONAR
         }
     }
     
@@ -336,6 +325,18 @@ function copyMaze1To2() {
 // RESOLUTION DE LABYRINTHE
 // ========================================
 
+// Helper: Get algorithm solver function
+function getAlgorithmSolver(algorithm) {
+    const solvers = {
+        'bfs': bfs,
+        'dfs': dfs,
+        'astar': astar,
+        'dijkstra': dijkstra,
+        'greedy': greedyBestFirst
+    };
+    return solvers[algorithm] || null;
+}
+
 async function solveMaze(panel) {
     console.log('Debut resolution panel ' + panel);
     
@@ -354,35 +355,16 @@ async function solveMaze(panel) {
         resetMaze(panel);
         
         const startTime = performance.now();
-        let path = null;
-        let visitedCount = 0;
         
-        // Appeler l'algorithme approprié
-        switch (algorithm) {
-            case 'bfs':
-                console.log('Lancement BFS');
-                ({ path, visitedCount } = await bfs(panel));
-                break;
-            case 'dfs':
-                console.log('Lancement DFS');
-                ({ path, visitedCount } = await dfs(panel));
-                break;
-            case 'astar':
-                console.log('Lancement A*');
-                ({ path, visitedCount } = await astar(panel));
-                break;
-            case 'dijkstra':
-                console.log('Lancement Dijkstra');
-                ({ path, visitedCount } = await dijkstra(panel));
-                break;
-            case 'greedy':
-                console.log('Lancement Greedy');
-                ({ path, visitedCount } = await greedyBestFirst(panel));
-                break;
-            default:
-                console.error('Algorithme inconnu: ' + algorithm);
-                return;
+        // Get and execute algorithm
+        const solver = getAlgorithmSolver(algorithm);
+        if (!solver) {
+            console.error('Algorithme inconnu: ' + algorithm);
+            return;
         }
+        
+        console.log('Lancement ' + algorithm.toUpperCase());
+        const { path, visitedCount } = await solver(panel);
         
         const endTime = performance.now();
         const executionTime = Math.round(endTime - startTime);
@@ -506,6 +488,29 @@ async function dfs(panel) {
     return { path: null, visitedCount };
 }
 
+// Helper: Mark cell as visited and update display
+async function markCellVisited(panel, x, y, startPos) {
+    if (x === startPos.x && y === startPos.y) return;
+    const maze = panel === 1 ? state.maze1 : state.maze2;
+    maze[y][x] = CELL_TYPES.VISITED;
+    drawMaze(panel);
+    await sleep(5);
+}
+
+// Helper: Process A* neighbor
+function processAStarNeighbor(neighbor, current, endPos, gScore, cameFrom, openSet) {
+    const neighborKey = `${neighbor.x},${neighbor.y}`;
+    const currentKey = `${current.x},${current.y}`;
+    const tentativeG = current.g + 1;
+    
+    if (!gScore.has(neighborKey) || tentativeG < gScore.get(neighborKey)) {
+        gScore.set(neighborKey, tentativeG);
+        const h = manhattanDistance(neighbor.x, neighbor.y, endPos.x, endPos.y);
+        cameFrom.set(neighborKey, currentKey);
+        openSet.push({ ...neighbor, f: tentativeG + h, g: tentativeG });
+    }
+}
+
 async function astar(panel) {
     const maze = panel === 1 ? state.maze1 : state.maze2;
     const startPos = panel === 1 ? state.startPos1 : state.startPos2;
@@ -518,7 +523,6 @@ async function astar(panel) {
     let visitedCount = 0;
     
     while (openSet.length > 0) {
-        // Trouver le nœud avec le plus petit f
         openSet.sort((a, b) => a.f - b.f);
         const current = openSet.shift();
         const currentKey = `${current.x},${current.y}`;
@@ -527,38 +531,33 @@ async function astar(panel) {
         visited.add(currentKey);
         visitedCount++;
         
-        // Marquer comme visité
-        if (current.x !== startPos.x || current.y !== startPos.y) {
-            maze[current.y][current.x] = CELL_TYPES.VISITED;
-            drawMaze(panel);
-            await sleep(5);
-        }
+        await markCellVisited(panel, current.x, current.y, startPos);
         
-        // Objectif atteint
         if (current.x === endPos.x && current.y === endPos.y) {
-            const path = reconstructPath(cameFrom, endPos);
-            return { path, visitedCount };
+            return { path: reconstructPath(cameFrom, endPos), visitedCount };
         }
         
-        // Explorer les voisins
         for (const neighbor of getNeighbors(panel, current.x, current.y)) {
             const neighborKey = `${neighbor.x},${neighbor.y}`;
             if (visited.has(neighborKey)) continue;
-            
-            const tentativeG = current.g + 1;
-            
-            if (!gScore.has(neighborKey) || tentativeG < gScore.get(neighborKey)) {
-                gScore.set(neighborKey, tentativeG);
-                const h = manhattanDistance(neighbor.x, neighbor.y, endPos.x, endPos.y);
-                const f = tentativeG + h;
-                
-                cameFrom.set(neighborKey, currentKey);
-                openSet.push({ ...neighbor, f, g: tentativeG });
-            }
+            processAStarNeighbor(neighbor, current, endPos, gScore, cameFrom, openSet);
         }
     }
     
     return { path: null, visitedCount };
+}
+
+// Helper: Process Dijkstra neighbor
+function processDijkstraNeighbor(neighbor, current, distances, cameFrom, openSet) {
+    const neighborKey = `${neighbor.x},${neighbor.y}`;
+    const currentKey = `${current.x},${current.y}`;
+    const tentativeDist = current.dist + 1;
+    
+    if (!distances.has(neighborKey) || tentativeDist < distances.get(neighborKey)) {
+        distances.set(neighborKey, tentativeDist);
+        cameFrom.set(neighborKey, currentKey);
+        openSet.push({ ...neighbor, dist: tentativeDist });
+    }
 }
 
 async function dijkstra(panel) {
@@ -573,7 +572,6 @@ async function dijkstra(panel) {
     let visitedCount = 0;
     
     while (openSet.length > 0) {
-        // Trouver le nœud avec la plus petite distance
         openSet.sort((a, b) => a.dist - b.dist);
         const current = openSet.shift();
         const currentKey = `${current.x},${current.y}`;
@@ -582,31 +580,16 @@ async function dijkstra(panel) {
         visited.add(currentKey);
         visitedCount++;
         
-        // Marquer comme visité
-        if (current.x !== startPos.x || current.y !== startPos.y) {
-            maze[current.y][current.x] = CELL_TYPES.VISITED;
-            drawMaze(panel);
-            await sleep(5);
-        }
+        await markCellVisited(panel, current.x, current.y, startPos);
         
-        // Objectif atteint
         if (current.x === endPos.x && current.y === endPos.y) {
-            const path = reconstructPath(cameFrom, endPos);
-            return { path, visitedCount };
+            return { path: reconstructPath(cameFrom, endPos), visitedCount };
         }
         
-        // Explorer les voisins
         for (const neighbor of getNeighbors(panel, current.x, current.y)) {
             const neighborKey = `${neighbor.x},${neighbor.y}`;
             if (visited.has(neighborKey)) continue;
-            
-            const tentativeDist = current.dist + 1;
-            
-            if (!distances.has(neighborKey) || tentativeDist < distances.get(neighborKey)) {
-                distances.set(neighborKey, tentativeDist);
-                cameFrom.set(neighborKey, currentKey);
-                openSet.push({ ...neighbor, dist: tentativeDist });
-            }
+            processDijkstraNeighbor(neighbor, current, distances, cameFrom, openSet);
         }
     }
     

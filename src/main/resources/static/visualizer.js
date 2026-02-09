@@ -57,7 +57,9 @@ async function startSorting(size = 50) {
     disableSortingButtons(true);
 
     // Générer un tableau aléatoire
-    const array = Array.from({ length: size }, () => Math.floor(Math.random() * 1000));
+    // NOSONAR javascript:S2245 - Math.random() est sûr ici car utilisé uniquement
+    // pour générer des données de test à des fins de visualisation, pas pour de la sécurité
+    const array = Array.from({ length: size }, () => Math.floor(Math.random() * 1000)); // NOSONAR
     console.log("Tableau envoyé :", array); // Log pour vérifier le contenu
 
     // Envoyer une requête à l'API pour récupérer les étapes du tri

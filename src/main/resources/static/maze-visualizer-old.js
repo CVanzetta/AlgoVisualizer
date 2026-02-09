@@ -162,7 +162,8 @@ function generateMaze() {
                 continue;
             }
             // 30% de chance d'être un mur
-            if (Math.random() < 0.3) {
+            // NOSONAR javascript:S2245 - Math.random() sûr pour visualisation éducative
+            if (Math.random() < 0.3) { // NOSONAR
                 maze[y][x] = CELL_TYPES.WALL;
             }
         }
