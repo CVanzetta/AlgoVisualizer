@@ -55,7 +55,6 @@ public class Dijkstra implements MazeAlgorithm {
         
         // 5. Initialiser
         Position start = new Position(startX, startY);
-        Position end = new Position(endX, endY);
         
         distance.put(start, 0.0);
         pq.offer(new Node(start, 0.0));

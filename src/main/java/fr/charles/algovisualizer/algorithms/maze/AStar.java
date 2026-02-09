@@ -56,7 +56,6 @@ public class AStar implements MazeAlgorithm {
         
         // 4. Initialiser le départ
         Position start = new Position(startX, startY);
-        Position end = new Position(endX, endY);
         
         gScore.put(start, 0.0);
         fScore.put(start, heuristic(startX, startY, endX, endY));

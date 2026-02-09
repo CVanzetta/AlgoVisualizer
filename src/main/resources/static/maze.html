@@ -15,6 +15,71 @@
             margin: 15px 0;
         }
 
+        .dual-view-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 20px auto;
+            max-width: 1700px;
+        }
+
+        .maze-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .maze-canvas {
+            border: 2px solid #333;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            cursor: crosshair;
+        }
+
+        body.dark-mode .maze-canvas {
+            border-color: #666;
+            background: #222;
+        }
+
+        .panel-controls {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .generator-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .generator-selector label {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .generator-selector select {
+            padding: 8px;
+            border-radius: 6px;
+            border: 2px solid #667eea;
+            font-size: 14px;
+        }
+
         .algorithm-buttons {
             display: flex;
             gap: 10px;
@@ -70,6 +135,7 @@
             gap: 10px;
             justify-content: center;
             margin: 20px 0;
+            flex-wrap: wrap;
         }
 
         .action-btn {
@@ -102,29 +168,17 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        #mazeCanvas {
-            border: 2px solid #333;
-            margin: 20px auto;
-            display: block;
-            background: white;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        body.dark-mode #mazeCanvas {
-            border-color: #666;
-            background: #222;
-        }
-
         .info-panel {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin: 15px 0;
-            font-size: 14px;
+            gap: 15px;
+            margin: 10px 0;
+            font-size: 12px;
+            flex-wrap: wrap;
         }
 
         .info-item {
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 6px;
             background: rgba(0, 0, 0, 0.05);
         }
@@ -156,7 +210,7 @@
         }
 
         .instructions {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 20px auto;
             padding: 15px;
             background: rgba(0, 0, 0, 0.05);
@@ -167,47 +221,146 @@
         body.dark-mode .instructions {
             background: rgba(255, 255, 255, 0.1);
         }
+
+        .sync-button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .sync-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body class="light-mode">
     <a href="index.html" class="back-button maze">← Retour</a>
 
     <div class="maze-controls-container">
-        <h1>Résolution de Labyrinthes</h1>
-
-        <div class="controls-section">
-            <h3>Choisir un algorithme</h3>
-            <div class="algorithm-buttons">
-                <button class="algo-btn bfs" onclick="selectAlgorithm('bfs')">BFS</button>
-                <button class="algo-btn dfs" onclick="selectAlgorithm('dfs')">DFS</button>
-                <button class="algo-btn astar" onclick="selectAlgorithm('astar')">A*</button>
-                <button class="algo-btn dijkstra" onclick="selectAlgorithm('dijkstra')">Dijkstra</button>
-                <button class="algo-btn greedy" onclick="selectAlgorithm('greedy')">Greedy Best-First</button>
-            </div>
-        </div>
+        <h1>Comparaison d'Algorithmes de Labyrinthes</h1>
 
         <div class="action-buttons">
-            <button class="action-btn generate" onclick="generateMaze()">Générer Labyrinthe</button>
-            <button class="action-btn clear" onclick="clearWalls()">Effacer Murs</button>
-            <button class="action-btn reset" onclick="resetMaze()">Réinitialiser</button>
+            <button class="sync-button" onclick="copyMaze1To2()">📋 Dupliquer Labyrinthe 1 → 2</button>
+            <button class="action-btn reset" onclick="resetBoth()">🔄 Réinitialiser Tout</button>
         </div>
 
-        <div class="info-panel">
-            <div class="info-item">
-                <strong>Algorithme:</strong> <span id="currentAlgo">Aucun</span>
+        <div class="dual-view-container">
+            <!-- Panel 1 -->
+            <div class="maze-panel">
+                <div class="panel-title">Labyrinthe 1</div>
+                <canvas id="mazeCanvas1" class="maze-canvas" width="600" height="600"></canvas>
+                
+                <div class="panel-controls">
+                    <div class="generator-selector">
+                        <label>Algorithme de génération:</label>
+                        <select id="generator1">
+                            <option value="random">Random (30% murs)</option>
+                            <option value="recursive">Recursive Backtracker 🔥</option>
+                            <option value="prim">Prim's Algorithm 🌳</option>
+                            <option value="kruskal">Kruskal's (Uniforme) ⚖️</option>
+                            <option value="binary">Binary Tree (Facile) 📐</option>
+                            <option value="sidewinder">Sidewinder (Rapide) ⚡</option>
+                            <option value="aldous-broder">Aldous-Broder (Lent) 🐌</option>
+                            <option value="wilson">Wilson's (Équilibré) 🎯</option>
+                            <option value="hunt-kill">Hunt-and-Kill 🎣</option>
+                            <option value="growing-tree">Growing Tree (Mixed) 🌱</option>
+                            <option value="eller">Eller's (Streaming) 🌊</option>
+                            <option value="recursive-division">Recursive Division 📦</option>
+                        </select>
+                    </div>
+                    
+                    <button class="action-btn generate" onclick="generateMaze(1)">🎲 Générer</button>
+                    
+                    <div class="generator-selector">
+                        <label>Algorithme de résolution:</label>
+                        <select id="solver1">
+                            <option value="bfs">BFS</option>
+                            <option value="dfs">DFS</option>
+                            <option value="astar">A*</option>
+                            <option value="dijkstra">Dijkstra</option>
+                            <option value="greedy">Greedy Best-First</option>
+                        </select>
+                    </div>
+                    
+                    <button class="algo-btn bfs" onclick="solveMaze(1)">▶️ Résoudre</button>
+                    <button class="action-btn clear" onclick="clearWalls(1)">🗑️ Effacer Murs</button>
+                    <button class="action-btn reset" onclick="resetMaze(1)">🔄 Réinitialiser</button>
+                    
+                    <div class="info-panel">
+                        <div class="info-item">
+                            <strong>Chemin:</strong> <span id="pathLength1">-</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Explorées:</strong> <span id="visitedCount1">0</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Temps:</strong> <span id="executionTime1">0ms</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="info-item">
-                <strong>Chemin trouvé:</strong> <span id="pathLength">-</span> cases
-            </div>
-            <div class="info-item">
-                <strong>Cases explorées:</strong> <span id="visitedCount">0</span>
-            </div>
-            <div class="info-item">
-                <strong>Temps:</strong> <span id="executionTime">0ms</span>
+
+            <!-- Panel 2 -->
+            <div class="maze-panel">
+                <div class="panel-title">Labyrinthe 2</div>
+                <canvas id="mazeCanvas2" class="maze-canvas" width="600" height="600"></canvas>
+                
+                <div class="panel-controls">
+                    <div class="generator-selector">
+                        <label>Algorithme de génération:</label>
+                        <select id="generator2">
+                            <option value="random">Random (30% murs)</option>
+                            <option value="recursive">Recursive Backtracker 🔥</option>
+                            <option value="prim">Prim's Algorithm 🌳</option>
+                            <option value="kruskal">Kruskal's (Uniforme) ⚖️</option>
+                            <option value="binary">Binary Tree (Facile) 📐</option>
+                            <option value="sidewinder">Sidewinder (Rapide) ⚡</option>
+                            <option value="aldous-broder">Aldous-Broder (Lent) 🐌</option>
+                            <option value="wilson">Wilson's (Équilibré) 🎯</option>
+                            <option value="hunt-kill">Hunt-and-Kill 🎣</option>
+                            <option value="growing-tree">Growing Tree (Mixed) 🌱</option>
+                            <option value="eller">Eller's (Streaming) 🌊</option>
+                            <option value="recursive-division">Recursive Division 📦</option>
+                        </select>
+                    </div>
+                    
+                    <button class="action-btn generate" onclick="generateMaze(2)">🎲 Générer</button>
+                    
+                    <div class="generator-selector">
+                        <label>Algorithme de résolution:</label>
+                        <select id="solver2">
+                            <option value="bfs">BFS</option>
+                            <option value="dfs">DFS</option>
+                            <option value="astar">A*</option>
+                            <option value="dijkstra">Dijkstra</option>
+                            <option value="greedy">Greedy Best-First</option>
+                        </select>
+                    </div>
+                    
+                    <button class="algo-btn bfs" onclick="solveMaze(2)">▶️ Résoudre</button>
+                    <button class="action-btn clear" onclick="clearWalls(2)">🗑️ Effacer Murs</button>
+                    <button class="action-btn reset" onclick="resetMaze(2)">🔄 Réinitialiser</button>
+                    
+                    <div class="info-panel">
+                        <div class="info-item">
+                            <strong>Chemin:</strong> <span id="pathLength2">-</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Explorées:</strong> <span id="visitedCount2">0</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Temps:</strong> <span id="executionTime2">0ms</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <canvas id="mazeCanvas" width="800" height="600"></canvas>
 
         <div class="legend">
             <div class="legend-item">
@@ -233,12 +386,16 @@
         </div>
 
         <div class="instructions">
-            <strong>Instructions:</strong><br>
-            1. Cliquez sur le canvas pour dessiner/effacer des murs<br>
-            2. Cliquez-glissez pour dessiner plusieurs murs<br>
-            3. Cliquez sur les boutons verts/rouges pour déplacer le départ/arrivée<br>
-            4. Générez un labyrinthe aléatoire ou créez le vôtre<br>
-            5. Sélectionnez un algorithme et observez la résolution en temps réel
+            <strong>🎯 Mode Comparaison:</strong><br>
+            1. <strong>Générez deux labyrinthes</strong> avec des algorithmes différents (ou dupliquez le même)<br>
+            2. <strong>Choisissez des algorithmes de résolution</strong> différents pour chaque labyrinthe<br>
+            3. <strong>Résolvez</strong> et comparez les performances (chemin, cases explorées, temps)<br>
+            4. <strong>Dessinez</strong> vos propres murs en cliquant sur les canvas<br>
+            <br>
+            <strong>💡 Exemples de comparaisons:</strong><br>
+            • Même labyrinthe, algorithmes différents → Quel algorithme est le plus efficace ?<br>
+            • Labyrinthes différents, même algorithme → Quel type de labyrinthe est le plus difficile ?<br>
+            • Recursive Backtracking vs Prim → Quelle génération crée les labyrinthes les plus complexes ?
         </div>
     </div>
 
