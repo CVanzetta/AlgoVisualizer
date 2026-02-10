@@ -485,7 +485,10 @@ async function dijkstra() {
     const priorityQueue = [];
     const distance = new Map();
     const visited = new Set();
+<<<<<<< HEAD
     const cameFrom = new Map();
+=======
+>>>>>>> dev
     let visitedCount = 0;
     
     // VOTRE CODE ICI
@@ -517,9 +520,13 @@ async function greedyBestFirst() {
     //      * Ajouter à la queue triée
     //      * Visualiser
     
+<<<<<<< HEAD
     const priorityQueue = [];
     const visited = new Set();
     const cameFrom = new Map();
+=======
+    const visited = new Set();
+>>>>>>> dev
     let visitedCount = 0;
     
     // VOTRE CODE ICI

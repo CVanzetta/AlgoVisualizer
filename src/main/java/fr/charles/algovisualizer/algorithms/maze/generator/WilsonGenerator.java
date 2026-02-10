@@ -35,7 +35,13 @@ import java.util.*;
  * - Les premières marches peuvent être longues
  * - Nécessite de mémoriser les chemins
  */
+<<<<<<< HEAD
 public class WilsonGenerator extends AbstractMazeGenerator {
+=======
+public class WilsonGenerator implements MazeGenerator {
+    
+    private Random random = new Random();
+>>>>>>> dev
     
     @Override
     public String getName() {
@@ -50,11 +56,23 @@ public class WilsonGenerator extends AbstractMazeGenerator {
     @Override
     @SuppressWarnings({"java:S3776", "java:S1541", "java:S6541"})
     public int[][] generate(int width, int height) {
+<<<<<<< HEAD
         int[][] maze = initializeMazeWithWalls(width, height);
         
         // Grille de cellules
         int cellWidth = getCellWidth(width);
         int cellHeight = getCellHeight(height);
+=======
+        // Initialiser toutes les cellules comme des murs
+        int[][] maze = new int[height][width];
+        for (int y = 0; y < height; y++) {
+            Arrays.fill(maze[y], 1);
+        }
+        
+        // Grille de cellules
+        int cellWidth = (width - 1) / 2;
+        int cellHeight = (height - 1) / 2;
+>>>>>>> dev
         
         // Marquer toutes les positions de cellules comme des passages
         for (int y = 0; y < cellHeight; y++) {

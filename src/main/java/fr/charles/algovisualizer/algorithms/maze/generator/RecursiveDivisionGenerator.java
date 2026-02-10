@@ -64,7 +64,13 @@ import java.util.*;
  * 
  * USAGE : Cartes de jeux, donjons RPG, niveaux procéduraux avec structure
  */
+<<<<<<< HEAD
 public class RecursiveDivisionGenerator extends AbstractMazeGenerator {
+=======
+public class RecursiveDivisionGenerator implements MazeGenerator {
+    
+    private Random random = new Random();
+>>>>>>> dev
     
     @Override
     public String getName() {

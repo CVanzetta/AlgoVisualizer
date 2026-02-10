@@ -39,6 +39,16 @@ public class AStar implements MazeAlgorithm {
     public MazeResult solve(int[][] maze, int startX, int startY, int endX, int endY) {
         long startTime = System.currentTimeMillis();
         
+<<<<<<< HEAD
+=======
+        // Cas particulier : si depart == arrivee
+        if (startX == endX && startY == endY) {
+            List<Position> path = new ArrayList<>();
+            path.add(new Position(startX, startY));
+            return new MazeResult(path, 1, System.currentTimeMillis() - startTime);
+        }
+        
+>>>>>>> dev
         // ========================================
         // À IMPLÉMENTER : Algorithme A*
         // ========================================
@@ -125,7 +135,10 @@ public class AStar implements MazeAlgorithm {
     /**
      * Reconstruit le chemin
      */
+<<<<<<< HEAD
     @SuppressWarnings("unused")
+=======
+>>>>>>> dev
     private List<Position> reconstructPath(Map<Position, Position> cameFrom, Position end) {
         List<Position> path = new ArrayList<>();
         Position current = end;
@@ -135,6 +148,14 @@ public class AStar implements MazeAlgorithm {
             current = cameFrom.get(current);
         }
         
+<<<<<<< HEAD
+=======
+        // Ajouter la position de départ (qui n'est jamais dans cameFrom)
+        if (current != null) {
+            path.add(current);
+        }
+        
+>>>>>>> dev
         Collections.reverse(path);
         return path;
     }
@@ -142,7 +163,10 @@ public class AStar implements MazeAlgorithm {
     /**
      * Retourne les voisins valides
      */
+<<<<<<< HEAD
     @SuppressWarnings("unused")
+=======
+>>>>>>> dev
     private List<Position> getNeighbors(int[][] maze, int x, int y) {
         List<Position> neighbors = new ArrayList<>();
         int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
