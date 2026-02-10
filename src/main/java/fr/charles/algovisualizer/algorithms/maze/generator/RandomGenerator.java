@@ -14,13 +14,9 @@ import java.util.Random;
  * - Utile pour les tests rapides
  * - Ne crée pas de "vrai" labyrinthe structuré
  */
-<<<<<<< HEAD
-public class RandomGenerator extends AbstractMazeGenerator {
-=======
 public class RandomGenerator implements MazeGenerator {
     
     private Random random = new Random();
->>>>>>> dev
     private static final double WALL_PROBABILITY = 0.3;
     
     @Override
@@ -39,12 +35,7 @@ public class RandomGenerator implements MazeGenerator {
         
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-<<<<<<< HEAD
-                // NOSONAR java:S2245 - Math.random() sûr pour visualisation éducative
-                maze[y][x] = random.nextDouble() < WALL_PROBABILITY ? WALL : EMPTY; // NOSONAR
-=======
                 maze[y][x] = random.nextDouble() < WALL_PROBABILITY ? 1 : 0;
->>>>>>> dev
             }
         }
         

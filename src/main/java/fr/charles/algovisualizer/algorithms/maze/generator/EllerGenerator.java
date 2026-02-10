@@ -55,13 +55,9 @@ import java.util.*;
  * 
  * USAGE : Génération de mondes infinis, roguelikes, jeux procéduraux
  */
-<<<<<<< HEAD
-public class EllerGenerator extends AbstractMazeGenerator {
-=======
 public class EllerGenerator implements MazeGenerator {
     
     private Random random = new Random();
->>>>>>> dev
     
     @Override
     public String getName() {

@@ -18,13 +18,9 @@ import java.util.Random;
  * - Facile à résoudre (suivre le mur nord ou est)
  * - Utile pour tester les algorithmes de résolution sur un cas simple
  */
-<<<<<<< HEAD
-public class BinaryTreeGenerator extends AbstractMazeGenerator {
-=======
 public class BinaryTreeGenerator implements MazeGenerator {
     
     private Random random = new Random();
->>>>>>> dev
     
     @Override
     public String getName() {
@@ -39,9 +35,6 @@ public class BinaryTreeGenerator implements MazeGenerator {
     @Override
     @SuppressWarnings("java:S3776")
     public int[][] generate(int width, int height) {
-<<<<<<< HEAD
-        int[][] maze = initializeMazeWithWalls(width, height);
-=======
         // Initialiser toutes les cellules comme des passages
         int[][] maze = new int[height][width];
         
@@ -51,16 +44,11 @@ public class BinaryTreeGenerator implements MazeGenerator {
                 maze[y][x] = 1; // Mur
             }
         }
->>>>>>> dev
         
         // Creuser les cellules selon Binary Tree
         for (int y = 0; y < height; y += 2) {
             for (int x = 0; x < width; x += 2) {
-<<<<<<< HEAD
-                markCellAsEmpty(maze, x, y); // Cellule actuelle = passage
-=======
                 maze[y][x] = 0; // Cellule actuelle = passage
->>>>>>> dev
                 
                 boolean canGoNorth = y > 0;
                 boolean canGoEast = x < width - 2;
@@ -68,16 +56,6 @@ public class BinaryTreeGenerator implements MazeGenerator {
                 if (canGoNorth && canGoEast) {
                     // Choisir aléatoirement nord ou est
                     if (random.nextBoolean()) {
-<<<<<<< HEAD
-                        removeWall(maze, x, y - 1); // Mur vers le nord
-                    } else {
-                        removeWall(maze, x + 1, y); // Mur vers l'est
-                    }
-                } else if (canGoNorth) {
-                    removeWall(maze, x, y - 1); // Mur vers le nord uniquement
-                } else if (canGoEast) {
-                    removeWall(maze, x + 1, y); // Mur vers l'est uniquement
-=======
                         maze[y - 1][x] = 0; // Mur vers le nord
                     } else {
                         maze[y][x + 1] = 0; // Mur vers l'est
@@ -86,7 +64,6 @@ public class BinaryTreeGenerator implements MazeGenerator {
                     maze[y - 1][x] = 0; // Mur vers le nord uniquement
                 } else if (canGoEast) {
                     maze[y][x + 1] = 0; // Mur vers l'est uniquement
->>>>>>> dev
                 }
             }
         }

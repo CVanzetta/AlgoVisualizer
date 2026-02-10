@@ -43,13 +43,9 @@ import java.util.*;
  * - Plus complexe conceptuellement
  * - Nécessite de maintenir une liste active
  */
-<<<<<<< HEAD
-public class GrowingTreeGenerator extends AbstractMazeGenerator {
-=======
 public class GrowingTreeGenerator implements MazeGenerator {
     
     private Random random = new Random();
->>>>>>> dev
     
     // Stratégie : probabilité de choisir la cellule la plus récente (0.0 à 1.0)
     // 1.0 = toujours la plus récente (Recursive Backtracker)

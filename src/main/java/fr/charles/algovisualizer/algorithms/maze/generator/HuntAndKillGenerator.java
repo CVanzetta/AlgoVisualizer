@@ -36,13 +36,9 @@ import java.util.*;
  * - Plus lent que Recursive Backtracker en pratique
  * - Nécessite de garder trace de toutes les cellules visitées
  */
-<<<<<<< HEAD
-public class HuntAndKillGenerator extends AbstractMazeGenerator {
-=======
 public class HuntAndKillGenerator implements MazeGenerator {
     
     private Random random = new Random();
->>>>>>> dev
     
     @Override
     public String getName() {
@@ -57,15 +53,11 @@ public class HuntAndKillGenerator implements MazeGenerator {
     @Override
     @SuppressWarnings("java:S3776")
     public int[][] generate(int width, int height) {
-<<<<<<< HEAD
-        int[][] maze = initializeMazeWithWalls(width, height);
-=======
         // Initialiser toutes les cellules comme des murs
         int[][] maze = new int[height][width];
         for (int y = 0; y < height; y++) {
             Arrays.fill(maze[y], 1);
         }
->>>>>>> dev
         
         // Grille de cellules
         int cellWidth = (width - 1) / 2;
