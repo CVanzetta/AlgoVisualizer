@@ -122,4 +122,46 @@ public abstract class AbstractMazeGenerator implements MazeGenerator {
     protected void removeWall(int[][] maze, int x, int y) {
         maze[y][x] = EMPTY;
     }
+    
+    /**
+     * Initialise un labyrinthe avec espacement de 2 (pattern classique).
+     * Crée d'abord un labyrinthe plein de murs, puis marque les positions
+     * de cellules (espacées de 2) comme des passages.
+     * 
+     * @param width Largeur totale du labyrinthe
+     * @param height Hauteur totale du labyrinthe
+     * @return Grille avec murs et cellules pré-marquées
+     */
+    protected int[][] initializeMazeWithSpacedCells(int width, int height) {
+        // Initialiser avec des murs
+        int[][] maze = initializeMazeWithWalls(width, height);
+        
+        // Calculer dimensions de la grille de cellules
+        int cellWidth = getCellWidth(width);
+        int cellHeight = getCellHeight(height);
+        
+        // Marquer les positions de cellules comme des passages
+        for (int y = 0; y < cellHeight; y++) {
+            for (int x = 0; x < cellWidth; x++) {
+                maze[cellToGridCoord(y)][cellToGridCoord(x)] = EMPTY;
+            }
+        }
+        
+        return maze;
+    }
+    
+    /**
+     * Calcule la position d'un mur entre deux cellules adjacentes.
+     * 
+     * @param cellX Position x de la première cellule (coordonnées de cellule 0, 1, 2...)
+     * @param cellY Position y de la première cellule
+     * @param dirX Direction x (-1, 0, ou 1)
+     * @param dirY Direction y (-1, 0, ou 1)
+     * @return Tableau [wallX, wallY] avec les coordonnées du mur dans la grille
+     */
+    protected int[] getWallPosition(int cellX, int cellY, int dirX, int dirY) {
+        int wallX = cellToGridCoord(cellX) + dirX;
+        int wallY = cellToGridCoord(cellY) + dirY;
+        return new int[]{wallX, wallY};
+    }
 }

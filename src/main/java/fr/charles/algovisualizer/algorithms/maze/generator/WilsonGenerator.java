@@ -50,22 +50,12 @@ public class WilsonGenerator extends AbstractMazeGenerator {
     @Override
     @SuppressWarnings({"java:S3776", "java:S1541", "java:S6541"})
     public int[][] generate(int width, int height) {
-        // Initialiser toutes les cellules comme des murs
-        int[][] maze = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            Arrays.fill(maze[y], 1);
-        }
+        // Initialiser le labyrinthe avec espacement de 2
+        int[][] maze = initializeMazeWithSpacedCells(width, height);
         
         // Grille de cellules
-        int cellWidth = (width - 1) / 2;
-        int cellHeight = (height - 1) / 2;
-        
-        // Marquer toutes les positions de cellules comme des passages
-        for (int y = 0; y < cellHeight; y++) {
-            for (int x = 0; x < cellWidth; x++) {
-                maze[y * 2 + 1][x * 2 + 1] = 0;
-            }
-        }
+        int cellWidth = getCellWidth(width);
+        int cellHeight = getCellHeight(height);
         
         // Tableau pour suivre les cellules dans le labyrinthe
         boolean[][] inMaze = new boolean[cellHeight][cellWidth];
@@ -151,9 +141,8 @@ public class WilsonGenerator extends AbstractMazeGenerator {
                 int nextY = currentY + DIRECTIONS[dir][1];
                 
                 // Supprimer le mur
-                int wallX = currentX * 2 + 1 + DIRECTIONS[dir][0];
-                int wallY = currentY * 2 + 1 + DIRECTIONS[dir][1];
-                maze[wallY][wallX] = 0;
+                int[] wall = getWallPosition(currentX, currentY, DIRECTIONS[dir][0], DIRECTIONS[dir][1]);
+                maze[wall[1]][wall[0]] = 0;
                 
                 // Marquer la cellule comme dans le labyrinthe
                 inMaze[currentY][currentX] = true;

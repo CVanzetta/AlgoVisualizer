@@ -70,22 +70,12 @@ public class EllerGenerator extends AbstractMazeGenerator {
     @Override
     @SuppressWarnings({"java:S3776", "java:S1541", "java:S6541"})
     public int[][] generate(int width, int height) {
-        // Initialiser toutes les cellules comme des murs
-        int[][] maze = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            Arrays.fill(maze[y], 1);
-        }
+        // Initialiser le labyrinthe avec espacement de 2
+        int[][] maze = initializeMazeWithSpacedCells(width, height);
         
         // Grille de cellules
-        int cellWidth = (width - 1) / 2;
-        int cellHeight = (height - 1) / 2;
-        
-        // Marquer les positions de cellules comme des passages
-        for (int y = 0; y < cellHeight; y++) {
-            for (int x = 0; x < cellWidth; x++) {
-                maze[y * 2 + 1][x * 2 + 1] = 0;
-            }
-        }
+        int cellWidth = getCellWidth(width);
+        int cellHeight = getCellHeight(height);
         
         // Tableau des ensembles pour la ligne actuelle
         int[] sets = new int[cellWidth];
@@ -108,8 +98,8 @@ public class EllerGenerator extends AbstractMazeGenerator {
                 // Ne fusionner que si dans des ensembles différents
                 if (shouldMerge && sets[x] != sets[x + 1]) {
                     // Supprimer le mur à l'est
-                    int wallX = x * 2 + 1 + 1;
-                    int wallY = row * 2 + 1;
+                    int wallX = cellToGridCoord(x) + 1;
+                    int wallY = cellToGridCoord(row);
                     maze[wallY][wallX] = 0;
                     
                     // Fusionner les ensembles
@@ -163,8 +153,8 @@ public class EllerGenerator extends AbstractMazeGenerator {
                 for (int x = 0; x < cellWidth - 1; x++) {
                     if (sets[x] != sets[x + 1]) {
                         // Supprimer le mur
-                        int wallX = x * 2 + 1 + 1;
-                        int wallY = row * 2 + 1;
+                        int wallX = cellToGridCoord(x) + 1;
+                        int wallY = cellToGridCoord(row);
                         maze[wallY][wallX] = 0;
                         
                         // Fusionner les ensembles

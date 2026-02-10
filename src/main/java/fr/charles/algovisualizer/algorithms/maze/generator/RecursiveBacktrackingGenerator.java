@@ -34,11 +34,8 @@ public class RecursiveBacktrackingGenerator extends AbstractMazeGenerator {
     
     @Override
     public int[][] generate(int width, int height) {
-        // Initialiser toutes les cellules comme des murs
-        int[][] maze = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            Arrays.fill(maze[y], 1);
-        }
+        // Initialiser avec des murs
+        int[][] maze = initializeMazeWithWalls(width, height);
         
         // Commencer au centre
         int startX = width / 2;

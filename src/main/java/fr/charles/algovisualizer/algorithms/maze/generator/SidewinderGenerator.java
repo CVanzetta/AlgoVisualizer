@@ -58,22 +58,12 @@ public class SidewinderGenerator extends AbstractMazeGenerator {
     @Override
     @SuppressWarnings("java:S3776")
     public int[][] generate(int width, int height) {
-        // Initialiser toutes les cellules comme des murs
-        int[][] maze = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            Arrays.fill(maze[y], 1);
-        }
+        // Initialiser le labyrinthe avec espacement de 2
+        int[][] maze = initializeMazeWithSpacedCells(width, height);
         
         // Grille de cellules
-        int cellWidth = (width - 1) / 2;
-        int cellHeight = (height - 1) / 2;
-        
-        // Marquer les positions de cellules comme des passages
-        for (int y = 0; y < cellHeight; y++) {
-            for (int x = 0; x < cellWidth; x++) {
-                maze[y * 2 + 1][x * 2 + 1] = 0;
-            }
-        }
+        int cellWidth = getCellWidth(width);
+        int cellHeight = getCellHeight(height);
         
         // Traiter chaque ligne de haut en bas
         for (int y = 0; y < cellHeight; y++) {
@@ -104,16 +94,16 @@ public class SidewinderGenerator extends AbstractMazeGenerator {
                     int runCell = runCells.get(random.nextInt(runCells.size()));
                     
                     // Supprimer le mur au nord de cette cellule
-                    int wallX = runCell * 2 + 1;
-                    int wallY = y * 2 + 1 - 1; // Nord
+                    int wallX = cellToGridCoord(runCell);
+                    int wallY = cellToGridCoord(y) - 1; // Nord
                     maze[wallY][wallX] = 0;
                     
                     // Vider le run
                     runCells.clear();
                 } else if (x < cellWidth - 1) {
                     // Continuer le run vers l'est : supprimer le mur à droite
-                    int wallX = x * 2 + 1 + 1; // Est
-                    int wallY = y * 2 + 1;
+                    int wallX = cellToGridCoord(x) + 1; // Est
+                    int wallY = cellToGridCoord(y);
                     maze[wallY][wallX] = 0;
                 }
             }

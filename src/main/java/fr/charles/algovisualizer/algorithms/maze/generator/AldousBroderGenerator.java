@@ -48,22 +48,12 @@ public class AldousBroderGenerator extends AbstractMazeGenerator {
     
     @Override
     public int[][] generate(int width, int height) {
-        // Initialiser toutes les cellules comme des murs
-        int[][] maze = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            Arrays.fill(maze[y], 1);
-        }
+        // Initialiser le labyrinthe avec espacement de 2
+        int[][] maze = initializeMazeWithSpacedCells(width, height);
         
-        // Grille de cellules (espacement de 2 pour les murs)
-        int cellWidth = (width - 1) / 2;
-        int cellHeight = (height - 1) / 2;
-        
-        // Marquer toutes les positions de cellules comme des passages
-        for (int y = 0; y < cellHeight; y++) {
-            for (int x = 0; x < cellWidth; x++) {
-                maze[y * 2 + 1][x * 2 + 1] = 0;
-            }
-        }
+        // Grille de cellules
+        int cellWidth = getCellWidth(width);
+        int cellHeight = getCellHeight(height);
         
         // Tableau pour suivre les cellules visitées
         boolean[][] visited = new boolean[cellHeight][cellWidth];
@@ -98,9 +88,8 @@ public class AldousBroderGenerator extends AbstractMazeGenerator {
             // Si le voisin n'a pas encore été visité
             if (!visited[nextY][nextX]) {
                 // Supprimer le mur entre les deux cellules
-                int wallX = currentX * 2 + 1 + (nextX - currentX);
-                int wallY = currentY * 2 + 1 + (nextY - currentY);
-                maze[wallY][wallX] = 0;
+                int[] wall = getWallPosition(currentX, currentY, nextX - currentX, nextY - currentY);
+                maze[wall[1]][wall[0]] = 0;
                 
                 // Marquer le voisin comme visité
                 visited[nextY][nextX] = true;
