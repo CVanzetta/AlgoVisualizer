@@ -402,7 +402,7 @@ if (!visited[neighbor.y][neighbor.x]) {
 
 ---
 
-## 💡 Solution mise en œuvre
+##  Solution mise en œuvre
 
 ### Création de la classe abstraite `AbstractMazeGenerator`
 
@@ -431,10 +431,9 @@ public class PrimGenerator extends AbstractMazeGenerator { ... }
 /** Générateur de nombres aléatoires partagé */
 protected final Random random = new Random();
 ```
-
-✅ Accessible à toutes les sous-classes via `protected`  
-✅ Une seule déclaration pour tout le module  
-✅ Possibilité de passer un seed pour les tests (futur)
+ Accessible à toutes les sous-classes via `protected`  
+ Une seule déclaration pour tout le module  
+ Possibilité de passer un seed pour les tests (futur)
 
 ---
 
@@ -445,9 +444,9 @@ protected final Random random = new Random();
 protected static final int[][] DIRECTIONS = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
 ```
 
-✅ Statique : partagée entre toutes les instances  
-✅ Modificateur `protected` : accessible aux sous-classes  
-✅ Documentation claire
+ Statique : partagée entre toutes les instances  
+ Modificateur `protected` : accessible aux sous-classes  
+ Documentation claire
 
 ---
 
@@ -513,7 +512,7 @@ protected int[][] initializeMazeWithEmpty(int width, int height) {
 }
 ```
 
-✅ Utile pour RecursiveDivisionGenerator (qui part d'une pièce vide)
+ Utile pour RecursiveDivisionGenerator (qui part d'une pièce vide)
 
 ---
 
@@ -663,7 +662,7 @@ removeWall(maze, wallX, wallY);  // Sémantique explicite !
 
 ### Exemple 1 : RecursiveBacktrackingGenerator
 
-#### ❌ Avant
+####  Avant
 
 ```java
 public class RecursiveBacktrackingGenerator implements MazeGenerator {
@@ -711,7 +710,7 @@ public class RecursiveBacktrackingGenerator implements MazeGenerator {
 
 ---
 
-#### ✅ Après
+####  Après
 
 ```java
 public class RecursiveBacktrackingGenerator extends AbstractMazeGenerator {
@@ -757,7 +756,7 @@ public class RecursiveBacktrackingGenerator extends AbstractMazeGenerator {
 
 ### Exemple 2 : WilsonGenerator
 
-#### ❌ Avant
+####  Avant
 
 ```java
 public class WilsonGenerator implements MazeGenerator {
@@ -783,7 +782,7 @@ public class WilsonGenerator implements MazeGenerator {
 
 ---
 
-#### ✅ Après
+####  Après
 
 ```java
 public class WilsonGenerator extends AbstractMazeGenerator {
@@ -806,7 +805,7 @@ public class WilsonGenerator extends AbstractMazeGenerator {
 
 ---
 
-## 📊 Métriques d'amélioration
+##  Métriques d'amélioration
 
 ### Phase 1 : Refactoring initial (AbstractMazeGenerator basique)
 
@@ -968,7 +967,7 @@ SonarQube a détecté une duplication résiduelle importante après Phase 1. Ana
 
 ---
 
-## 🎯 Bénéfices
+##  Bénéfices
 
 ### 1. **Principe DRY respecté**
 > "Don't Repeat Yourself"
@@ -1050,7 +1049,7 @@ public class NewGenerator extends AbstractMazeGenerator {
 
 ---
 
-## 📚 Guide d'utilisation
+##  Guide d'utilisation
 
 ### Pour créer un nouveau générateur
 
@@ -1161,7 +1160,7 @@ public int[][] generate(int width, int height) {
 
 ---
 
-## 📈 Conclusion
+##  Conclusion
 
 Le refactoring a permis de :
 
@@ -1178,7 +1177,7 @@ Le refactoring a permis de :
 
 ---
 
-## 📖 Références
+##  Références
 
 - **Fichier source** : `src/main/java/fr/charles/algovisualizer/algorithms/maze/generator/AbstractMazeGenerator.java`
 - **SonarQube** : Duplication passée de ~20% à ~7% en moyenne
