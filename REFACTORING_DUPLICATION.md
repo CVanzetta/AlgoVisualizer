@@ -46,9 +46,9 @@ private Random random = new Random();
 ```
 
 **Impact** :
-- 12 instances de Random créées
-- Code répétitif
-- Impossible de centraliser la graine (seed) pour les tests
+- Code répétitif dans 12 fichiers (`new Random()` recopié partout)
+- Impossible de centraliser la graine (seed) pour les tests tant que chaque générateur crée son propre `Random`
+- L'extraction dans `AbstractMazeGenerator` supprime la duplication, mais laisse une instance de `Random` par générateur (un partage/injection explicite serait une évolution séparée)
 
 ---
 
