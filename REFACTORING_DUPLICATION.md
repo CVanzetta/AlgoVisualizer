@@ -625,13 +625,15 @@ if (isInBounds(nx, ny, width, height) && maze[ny][nx] == WALL) {
 ### 5. **Tests facilités**
 
 ```java
-// On peut maintenant tester isolément
-@Test
-public void testIsInBounds() {
-    AbstractMazeGenerator generator = new KruskalGenerator();
-    assertTrue(generator.isInBounds(5, 5, 10, 10));
-    assertFalse(generator.isInBounds(-1, 5, 10, 10));
-    assertFalse(generator.isInBounds(10, 5, 10, 10));
+// On peut maintenant tester isolément la logique utilitaire
+public class AbstractMazeGeneratorTest extends KruskalGenerator {
+
+    @Test
+    public void testIsInBounds() {
+        assertTrue(isInBounds(5, 5, 10, 10));
+        assertFalse(isInBounds(-1, 5, 10, 10));
+        assertFalse(isInBounds(10, 5, 10, 10));
+    }
 }
 ```
 
