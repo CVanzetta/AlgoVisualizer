@@ -14,7 +14,13 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/maze/generate")
-@CrossOrigin(origins = "*")
+// CORS est intentionnellement ouvert car :
+// 1. Application éducative sans données sensibles
+// 2. Endpoint de calcul pur (génération de labyrinthes)
+// 3. Pas d'authentification requise par design
+// 4. Pas de modifications de données persistantes
+// NOTE: Si déploiement en production publique, restreindre aux domaines autorisés
+@CrossOrigin(origins = "*")  // NOSONAR java:S5122
 public class MazeGenerationController {
     
     @Autowired

@@ -20,9 +20,7 @@ import java.util.*;
  * - Peu d'embranchements
  * - Difficulté moyenne pour la résolution
  */
-public class RecursiveBacktrackingGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class RecursiveBacktrackingGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {
@@ -36,11 +34,7 @@ public class RecursiveBacktrackingGenerator implements MazeGenerator {
     
     @Override
     public int[][] generate(int width, int height) {
-        // Initialiser toutes les cellules comme des murs
-        int[][] maze = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            Arrays.fill(maze[y], 1);
-        }
+        int[][] maze = initializeMazeWithWalls(width, height);
         
         // Commencer au centre
         int startX = width / 2;
@@ -53,14 +47,10 @@ public class RecursiveBacktrackingGenerator implements MazeGenerator {
     }
     
     private void carve(int[][] maze, int x, int y, int width, int height) {
-        // Marquer la cellule actuelle comme un passage
-        maze[y][x] = 0;
-        
-        // Directions : haut, droite, bas, gauche
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+        markCellAsEmpty(maze, x, y);
         
         // Mélanger les directions aléatoirement
-        List<int[]> dirList = new ArrayList<>(Arrays.asList(directions));
+        List<int[]> dirList = new ArrayList<>(Arrays.asList(DIRECTIONS));
         Collections.shuffle(dirList, random);
         
         // Pour chaque direction
@@ -69,9 +59,9 @@ public class RecursiveBacktrackingGenerator implements MazeGenerator {
             int ny = y + dir[1] * 2;
             
             // Vérifier si la nouvelle position est valide et non visitée
-            if (nx >= 0 && nx < width && ny >= 0 && ny < height && maze[ny][nx] == 1) {
+            if (isInBounds(nx, ny, width, height) && maze[ny][nx] == WALL) {
                 // Supprimer le mur entre les deux cellules
-                maze[y + dir[1]][x + dir[0]] = 0;
+                removeWall(maze, x + dir[0], y + dir[1]);
                 
                 // Récursion sur la nouvelle cellule
                 carve(maze, nx, ny, width, height);

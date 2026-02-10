@@ -36,9 +36,7 @@ import java.util.*;
  * - Plus complexe à implémenter (Union-Find)
  * - Nécessite plus de mémoire (liste de tous les murs)
  */
-public class KruskalGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class KruskalGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {
@@ -52,11 +50,7 @@ public class KruskalGenerator implements MazeGenerator {
     
     @Override
     public int[][] generate(int width, int height) {
-        // Initialiser toutes les cellules comme des murs
-        int[][] maze = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            Arrays.fill(maze[y], 1);
-        }
+        int[][] maze = initializeMazeWithWalls(width, height);
         
         // Créer la grille de cellules (espacement de 2 pour les murs)
         int cellWidth = (width - 1) / 2;

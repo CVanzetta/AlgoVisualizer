@@ -43,9 +43,7 @@ import java.util.*;
  * 
  * USAGE : Tests rapides, génération en temps réel, algorithmes pédagogiques
  */
-public class SidewinderGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class SidewinderGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {
@@ -57,16 +55,14 @@ public class SidewinderGenerator implements MazeGenerator {
         return "Traitement ligne par ligne avec runs horizontaux (rapide, biais nord-est)";
     }
     
-    @Override    @SuppressWarnings("java:S3776")    public int[][] generate(int width, int height) {
-        // Initialiser toutes les cellules comme des murs
-        int[][] maze = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            Arrays.fill(maze[y], 1);
-        }
+    @Override
+    @SuppressWarnings("java:S3776")
+    public int[][] generate(int width, int height) {
+        int[][] maze = initializeMazeWithWalls(width, height);
         
         // Grille de cellules
-        int cellWidth = (width - 1) / 2;
-        int cellHeight = (height - 1) / 2;
+        int cellWidth = getCellWidth(width);
+        int cellHeight = getCellHeight(height);
         
         // Marquer les positions de cellules comme des passages
         for (int y = 0; y < cellHeight; y++) {

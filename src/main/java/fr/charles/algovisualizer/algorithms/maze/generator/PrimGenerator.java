@@ -22,9 +22,7 @@ import java.util.*;
  * - Chemins plus variés
  * - Difficulté élevée pour la résolution
  */
-public class PrimGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class PrimGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {
@@ -38,16 +36,12 @@ public class PrimGenerator implements MazeGenerator {
     
     @Override
     public int[][] generate(int width, int height) {
-        // Initialiser toutes les cellules comme des murs
-        int[][] maze = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            Arrays.fill(maze[y], 1);
-        }
+        int[][] maze = initializeMazeWithWalls(width, height);
         
         // Cellule de départ
         int startX = width / 2;
         int startY = height / 2;
-        maze[startY][startX] = 0;
+        markCellAsEmpty(maze, startX, startY);
         
         // Liste des murs frontières
         List<Wall> walls = new ArrayList<>();

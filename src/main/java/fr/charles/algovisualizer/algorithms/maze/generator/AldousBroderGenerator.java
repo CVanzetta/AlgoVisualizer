@@ -34,9 +34,7 @@ import java.util.*;
  * NOTE : Pour améliorer la vitesse, on peut basculer vers Wilson's après avoir visité 
  * une certaine proportion de cellules (stratégie hybride).
  */
-public class AldousBroderGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class AldousBroderGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {
@@ -50,14 +48,10 @@ public class AldousBroderGenerator implements MazeGenerator {
     
     @Override
     public int[][] generate(int width, int height) {
-        // Initialiser toutes les cellules comme des murs
-        int[][] maze = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            Arrays.fill(maze[y], 1);
-        }
+        int[][] maze = initializeMazeWithWalls(width, height);
         
         // Grille de cellules (espacement de 2 pour les murs)
-        int cellWidth = (width - 1) / 2;
+        int cellWidth = getCellWidth(width);
         int cellHeight = (height - 1) / 2;
         
         // Marquer toutes les positions de cellules comme des passages
