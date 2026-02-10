@@ -26,7 +26,7 @@ import java.util.*;
  * À IMPLÉMENTER
  * ========================================
  */
-public class Dijkstra implements MazeAlgorithm {
+public class Dijkstra extends AbstractMazeAlgorithm {
     
     @Override
     public String getName() {
@@ -109,48 +109,5 @@ public class Dijkstra implements MazeAlgorithm {
             this.position = position;
             this.distance = distance;
         }
-    }
-    
-    /**
-     * Reconstruit le chemin
-     */
-    @SuppressWarnings("unused")
-    private List<Position> reconstructPath(Map<Position, Position> cameFrom, Position end) {
-        List<Position> path = new ArrayList<>();
-        Position current = end;
-        
-        while (current != null && cameFrom.containsKey(current)) {
-            path.add(current);
-            current = cameFrom.get(current);
-        }
-        
-        Collections.reverse(path);
-        return path;
-    }
-    
-    /**
-     * Retourne les voisins valides
-     */
-    @SuppressWarnings("unused")
-    private List<Position> getNeighbors(int[][] maze, int x, int y) {
-        List<Position> neighbors = new ArrayList<>();
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
-        
-        for (int[] dir : directions) {
-            int newX = x + dir[0];
-            int newY = y + dir[1];
-            
-            if (isValid(maze, newX, newY)) {
-                neighbors.add(new Position(newX, newY));
-            }
-        }
-        
-        return neighbors;
-    }
-    
-    private boolean isValid(int[][] maze, int x, int y) {
-        return x >= 0 && x < maze[0].length && 
-               y >= 0 && y < maze.length && 
-               maze[y][x] != 1;
     }
 }

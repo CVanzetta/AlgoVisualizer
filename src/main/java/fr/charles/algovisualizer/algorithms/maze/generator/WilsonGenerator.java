@@ -35,9 +35,7 @@ import java.util.*;
  * - Les premières marches peuvent être longues
  * - Nécessite de mémoriser les chemins
  */
-public class WilsonGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class WilsonGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {
@@ -80,9 +78,6 @@ public class WilsonGenerator implements MazeGenerator {
         inMaze[startY][startX] = true;
         cellsInMaze++;
         
-        // Directions : haut, droite, bas, gauche
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
-        
         // Continuer jusqu'à avoir toutes les cellules dans le labyrinthe
         while (cellsInMaze < totalCells) {
             // Choisir une cellule aléatoire pas encore dans le labyrinthe
@@ -104,8 +99,8 @@ public class WilsonGenerator implements MazeGenerator {
             while (!inMaze[currentY][currentX]) {
                 // Choisir une direction aléatoire
                 int dir = random.nextInt(4);
-                int nextX = currentX + directions[dir][0];
-                int nextY = currentY + directions[dir][1];
+                int nextX = currentX + DIRECTIONS[dir][0];
+                int nextY = currentY + DIRECTIONS[dir][1];
                 
                 // Vérifier les limites
                 if (nextX >= 0 && nextX < cellWidth && nextY >= 0 && nextY < cellHeight) {
@@ -129,8 +124,8 @@ public class WilsonGenerator implements MazeGenerator {
                         for (int ny = 0; ny < cellHeight; ny++) {
                             for (int nx = 0; nx < cellWidth; nx++) {
                                 if (path[ny][nx] != -1) {
-                                    int testX = nx + directions[path[ny][nx]][0];
-                                    int testY = ny + directions[path[ny][nx]][1];
+                                    int testX = nx + DIRECTIONS[path[ny][nx]][0];
+                                    int testY = ny + DIRECTIONS[path[ny][nx]][1];
                                     if (testX == x && testY == y && !inMaze[ny][nx]) {
                                         isStart = false;
                                         break;
@@ -152,12 +147,12 @@ public class WilsonGenerator implements MazeGenerator {
             // Suivre le chemin et supprimer les murs
             while (currentX != -1 && currentY != -1 && path[currentY][currentX] != -1) {
                 int dir = path[currentY][currentX];
-                int nextX = currentX + directions[dir][0];
-                int nextY = currentY + directions[dir][1];
+                int nextX = currentX + DIRECTIONS[dir][0];
+                int nextY = currentY + DIRECTIONS[dir][1];
                 
                 // Supprimer le mur
-                int wallX = currentX * 2 + 1 + directions[dir][0];
-                int wallY = currentY * 2 + 1 + directions[dir][1];
+                int wallX = currentX * 2 + 1 + DIRECTIONS[dir][0];
+                int wallY = currentY * 2 + 1 + DIRECTIONS[dir][1];
                 maze[wallY][wallX] = 0;
                 
                 // Marquer la cellule comme dans le labyrinthe

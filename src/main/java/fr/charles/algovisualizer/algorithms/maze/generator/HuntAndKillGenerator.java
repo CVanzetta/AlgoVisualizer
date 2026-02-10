@@ -36,9 +36,7 @@ import java.util.*;
  * - Plus lent que Recursive Backtracker en pratique
  * - Nécessite de garder trace de toutes les cellules visitées
  */
-public class HuntAndKillGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class HuntAndKillGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {
@@ -81,13 +79,10 @@ public class HuntAndKillGenerator implements MazeGenerator {
         visited[currentY][currentX] = true;
         visitedCount++;
         
-        // Directions : haut, droite, bas, gauche
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
-        
         while (visitedCount < totalCells) {
             // PHASE KILL : Marche aléatoire
             List<int[]> unvisitedNeighbors = getUnvisitedNeighbors(currentX, currentY, 
-                                                                     visited, cellWidth, cellHeight, directions);
+                                                                     visited, cellWidth, cellHeight, DIRECTIONS);
             
             while (!unvisitedNeighbors.isEmpty()) {
                 // Choisir un voisin non visité aléatoire
@@ -108,7 +103,7 @@ public class HuntAndKillGenerator implements MazeGenerator {
                 
                 // Chercher les prochains voisins non visités
                 unvisitedNeighbors = getUnvisitedNeighbors(currentX, currentY, 
-                                                           visited, cellWidth, cellHeight, directions);
+                                                           visited, cellWidth, cellHeight, DIRECTIONS);
             }
             
             // PHASE HUNT : Scanner la grille pour trouver une cellule non visitée
@@ -119,7 +114,7 @@ public class HuntAndKillGenerator implements MazeGenerator {
                 for (int x = 0; x < cellWidth && !found; x++) {
                     if (!visited[y][x]) {
                         // Vérifier si cette cellule a un voisin visité
-                        for (int[] dir : directions) {
+                        for (int[] dir : DIRECTIONS) {
                             int nx = x + dir[0];
                             int ny = y + dir[1];
                             

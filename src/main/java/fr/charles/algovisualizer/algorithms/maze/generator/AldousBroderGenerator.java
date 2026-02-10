@@ -34,9 +34,7 @@ import java.util.*;
  * NOTE : Pour améliorer la vitesse, on peut basculer vers Wilson's après avoir visité 
  * une certaine proportion de cellules (stratégie hybride).
  */
-public class AldousBroderGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class AldousBroderGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {
@@ -78,15 +76,12 @@ public class AldousBroderGenerator implements MazeGenerator {
         visited[currentY][currentX] = true;
         visitedCount++;
         
-        // Directions possibles : haut, droite, bas, gauche
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
-        
         // Continuer jusqu'à avoir visité toutes les cellules
         while (visitedCount < totalCells) {
             // Trouver les voisins valides
             List<int[]> validNeighbors = new ArrayList<>();
             
-            for (int[] dir : directions) {
+            for (int[] dir : DIRECTIONS) {
                 int nx = currentX + dir[0];
                 int ny = currentY + dir[1];
                 

@@ -43,9 +43,7 @@ import java.util.*;
  * 
  * USAGE : Tests rapides, génération en temps réel, algorithmes pédagogiques
  */
-public class SidewinderGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class SidewinderGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {

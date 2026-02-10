@@ -18,9 +18,7 @@ import java.util.Random;
  * - Facile à résoudre (suivre le mur nord ou est)
  * - Utile pour tester les algorithmes de résolution sur un cas simple
  */
-public class BinaryTreeGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class BinaryTreeGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {

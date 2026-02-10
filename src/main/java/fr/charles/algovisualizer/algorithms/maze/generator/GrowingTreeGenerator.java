@@ -43,9 +43,7 @@ import java.util.*;
  * - Plus complexe conceptuellement
  * - Nécessite de maintenir une liste active
  */
-public class GrowingTreeGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class GrowingTreeGenerator extends AbstractMazeGenerator {
     
     // Stratégie : probabilité de choisir la cellule la plus récente (0.0 à 1.0)
     // 1.0 = toujours la plus récente (Recursive Backtracker)
@@ -95,9 +93,6 @@ public class GrowingTreeGenerator implements MazeGenerator {
         visited[startY][startX] = true;
         activeCells.add(new Cell(startX, startY));
         
-        // Directions : haut, droite, bas, gauche
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
-        
         // Continuer tant qu'il y a des cellules actives
         while (!activeCells.isEmpty()) {
             // STRATÉGIE DE SÉLECTION : Mixed (50% newest, 50% random)
@@ -115,7 +110,7 @@ public class GrowingTreeGenerator implements MazeGenerator {
             // Trouver les voisins non visités
             List<int[]> unvisitedNeighbors = new ArrayList<>();
             
-            for (int[] dir : directions) {
+            for (int[] dir : DIRECTIONS) {
                 int nx = current.x + dir[0];
                 int ny = current.y + dir[1];
                 

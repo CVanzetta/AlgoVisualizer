@@ -20,9 +20,7 @@ import java.util.*;
  * - Peu d'embranchements
  * - Difficulté moyenne pour la résolution
  */
-public class RecursiveBacktrackingGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class RecursiveBacktrackingGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {
@@ -56,11 +54,8 @@ public class RecursiveBacktrackingGenerator implements MazeGenerator {
         // Marquer la cellule actuelle comme un passage
         maze[y][x] = 0;
         
-        // Directions : haut, droite, bas, gauche
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
-        
         // Mélanger les directions aléatoirement
-        List<int[]> dirList = new ArrayList<>(Arrays.asList(directions));
+        List<int[]> dirList = new ArrayList<>(Arrays.asList(DIRECTIONS));
         Collections.shuffle(dirList, random);
         
         // Pour chaque direction

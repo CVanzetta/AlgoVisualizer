@@ -14,9 +14,8 @@ import java.util.Random;
  * - Utile pour les tests rapides
  * - Ne crée pas de "vrai" labyrinthe structuré
  */
-public class RandomGenerator implements MazeGenerator {
+public class RandomGenerator extends AbstractMazeGenerator {
     
-    private Random random = new Random();
     private static final double WALL_PROBABILITY = 0.3;
     
     @Override

@@ -22,9 +22,7 @@ import java.util.*;
  * - Chemins plus variés
  * - Difficulté élevée pour la résolution
  */
-public class PrimGenerator implements MazeGenerator {
-    
-    private Random random = new Random();
+public class PrimGenerator extends AbstractMazeGenerator {
     
     @Override
     public String getName() {
@@ -84,9 +82,7 @@ public class PrimGenerator implements MazeGenerator {
     }
     
     private void addWalls(List<Wall> walls, int x, int y, int width, int height) {
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
-        
-        for (int[] dir : directions) {
+        for (int[] dir : DIRECTIONS) {
             int nx = x + dir[0];
             int ny = y + dir[1];
             
@@ -98,9 +94,8 @@ public class PrimGenerator implements MazeGenerator {
     
     private int countVisitedNeighbors(int[][] maze, int x, int y, int width, int height) {
         int count = 0;
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
         
-        for (int[] dir : directions) {
+        for (int[] dir : DIRECTIONS) {
             int nx = x + dir[0];
             int ny = y + dir[1];
             

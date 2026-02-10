@@ -24,7 +24,7 @@ import java.util.*;
  * À IMPLÉMENTER
  * ========================================
  */
-public class BFS implements MazeAlgorithm {
+public class BFS extends AbstractMazeAlgorithm {
     
     @Override
     public String getName() {
@@ -81,60 +81,5 @@ public class BFS implements MazeAlgorithm {
         // 6. Si on arrive ici, aucun chemin n'a été trouvé
         long endTime = System.currentTimeMillis();
         return new MazeResult(null, visitedCount, endTime - startTime);
-    }
-    
-    /**
-     * Reconstruit le chemin depuis l'arrivée jusqu'au départ
-     * 
-     * À UTILISER dans votre implémentation:
-     * List<Position> path = reconstructPath(cameFrom, endPosition);
-     */
-    @SuppressWarnings("unused")
-    private List<Position> reconstructPath(Map<Position, Position> cameFrom, Position end) {
-        List<Position> path = new ArrayList<>();
-        Position current = end;
-        
-        // Remonter le chemin depuis end jusqu'au départ en suivant cameFrom
-        while (current != null && cameFrom.containsKey(current)) {
-            path.add(current);
-            current = cameFrom.get(current);
-        }
-        
-        // Inverser le chemin pour avoir départ -> arrivée
-        Collections.reverse(path);
-        return path;
-    }
-    
-    /**
-     * Retourne les voisins valides d'une position (haut, droite, bas, gauche)
-     * 
-     * À UTILISER dans votre implémentation:
-     * List<Position> neighbors = getNeighbors(maze, current.x, current.y);
-     */
-    @SuppressWarnings("unused")
-    private List<Position> getNeighbors(int[][] maze, int x, int y) {
-        List<Position> neighbors = new ArrayList<>();
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}; // Haut, Droite, Bas, Gauche
-        
-        for (int[] dir : directions) {
-            int newX = x + dir[0];
-            int newY = y + dir[1];
-            
-            // Vérifier que la position est dans les limites et n'est pas un mur
-            if (isValid(maze, newX, newY)) {
-                neighbors.add(new Position(newX, newY));
-            }
-        }
-        
-        return neighbors;
-    }
-    
-    /**
-     * Vérifie si une position est valide (dans les limites et pas un mur)
-     */
-    private boolean isValid(int[][] maze, int x, int y) {
-        return x >= 0 && x < maze[0].length && 
-               y >= 0 && y < maze.length && 
-               maze[y][x] != 1; // 1 = mur
     }
 }
