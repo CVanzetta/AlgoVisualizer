@@ -9,6 +9,17 @@
 
 Une application Spring Boot pour visualiser des algorithmes de tri et de graphes en temps réel dans le navigateur.
 
+## Application Interface
+
+### Light Mode
+![Light Mode](screenshot1.png)
+
+### Dark Mode
+![Dark Mode](screenshot2.png)
+
+### Sorting in Action
+![Sorting](screenshot3.png)
+
 ## Fonctionnalités
 
 - **Visualisation d'algorithmes de tri** : BubbleSort, QuickSort, InsertionSort
